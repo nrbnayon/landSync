@@ -1,20 +1,39 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { landParcelsData } from "@/data/landParcelsData";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Pagination } from "@/components/Shared/Pagination";
+import TranslatedText from "@/components/Shared/TranslatedText";
+import { Skeleton } from "@/components/ui/skeleton";
 
-export default function LandParcelsTable() {
+// Define interface for props if you want to make it reusable later
+interface LandParcelsTableProps {
+  itemsPerPage?: number;
+}
+
+export default function LandParcelsTable({ itemsPerPage = 10 }: LandParcelsTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
-  const totalItems = 250; // Mock total for 'of 250' display as per image
-  // In a real app, this would come from the API/data length
+  const [isLoading, setIsLoading] = useState(true);
   
-  // Since we only have 10 mock items, we'll just show them all for page 1
-  // But functionally we set this up for pagination
-  const currentItems = landParcelsData; 
-
+  // Logic for pagination
+  const totalItems = landParcelsData.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
+  
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentItems = landParcelsData.slice(startIndex, endIndex);
+
+  useEffect(() => {
+    setIsLoading(true);
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 800); // Simulate network delay
+    return () => clearTimeout(timer);
+  }, [currentPage]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   const getTypeColor = (type: string) => {
     switch (type) {
@@ -48,87 +67,76 @@ export default function LandParcelsTable() {
         <table className="w-full">
           <thead>
             <tr className="bg-primary text-white">
-              <th className="px-6 py-4 text-left text-sm font-semibold">Parcel ID</th>
-              <th className="px-6 py-4 text-left text-sm font-semibold">Owner Name</th>
-              <th className="px-6 py-4 text-left text-sm font-semibold">Area (m²)</th>
-              <th className="px-6 py-4 text-left text-sm font-semibold">Zone</th>
-              <th className="px-6 py-4 text-left text-sm font-semibold">Type</th>
-              <th className="px-6 py-4 text-left text-sm font-semibold">Ownership</th>
-              <th className="px-6 py-4 text-left text-sm font-semibold">Registration Date</th>
+              <th className="px-6 py-4 text-left text-sm font-semibold"><TranslatedText text="Parcel ID" /></th>
+              <th className="px-6 py-4 text-left text-sm font-semibold"><TranslatedText text="Owner Name" /></th>
+              <th className="px-6 py-4 text-left text-sm font-semibold"><TranslatedText text="Area (m²)" /></th>
+              <th className="px-6 py-4 text-left text-sm font-semibold"><TranslatedText text="Zone" /></th>
+              <th className="px-6 py-4 text-left text-sm font-semibold"><TranslatedText text="Type" /></th>
+              <th className="px-6 py-4 text-left text-sm font-semibold"><TranslatedText text="Ownership" /></th>
+              <th className="px-6 py-4 text-left text-sm font-semibold"><TranslatedText text="Registration Date" /></th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
-            {currentItems.map((parcel, index) => (
-              <tr 
-                key={parcel.id}
-                className="hover:bg-gray-50 transition-colors"
-              >
-                <td className="px-6 py-4 text-sm text-secondary">
-                  {parcel.parcelId}
-                </td>
-                <td className="px-6 py-4 text-sm font-medium text-foreground">
-                  {parcel.ownerName}
-                </td>
-                <td className="px-6 py-4 text-sm text-secondary">
-                  {parcel.area.toLocaleString()} m²
-                </td>
-                <td className="px-6 py-4 text-sm text-secondary">
-                  {parcel.zone}
-                </td>
-                <td className="px-6 py-4">
-                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${getTypeColor(parcel.type)}`}>
-                    {parcel.type}
-                  </span>
-                </td>
-                <td className="px-6 py-4">
-                  <span className={`px-4 py-1 rounded-full text-xs font-medium ${getOwnershipColor(parcel.ownership)}`}>
-                    {parcel.ownership}
-                  </span>
-                </td>
-                <td className="px-6 py-4 text-sm text-secondary">
-                  {parcel.registrationDate}
-                </td>
-              </tr>
-            ))}
+            {isLoading ? (
+              // Skeleton Loading State
+              Array.from({ length: itemsPerPage }).map((_, index) => (
+                <tr key={`skeleton-${index}`}>
+                  <td className="px-6 py-4"><Skeleton className="h-4 w-20" /></td>
+                  <td className="px-6 py-4"><Skeleton className="h-4 w-32" /></td>
+                  <td className="px-6 py-4"><Skeleton className="h-4 w-24" /></td>
+                  <td className="px-6 py-4"><Skeleton className="h-4 w-16" /></td>
+                  <td className="px-6 py-4"><Skeleton className="h-6 w-24 rounded-full" /></td>
+                  <td className="px-6 py-4"><Skeleton className="h-6 w-20 rounded-full" /></td>
+                  <td className="px-6 py-4"><Skeleton className="h-4 w-24" /></td>
+                </tr>
+              ))
+            ) : (
+              // Actual Data
+              currentItems.map((parcel) => (
+                <tr 
+                  key={parcel.id}
+                  className="hover:bg-gray-50 transition-colors"
+                >
+                  <td className="px-6 py-4 text-sm text-secondary">
+                    {parcel.parcelId}
+                  </td>
+                  <td className="px-6 py-4 text-sm font-medium text-foreground">
+                    {parcel.ownerName}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-secondary">
+                    {parcel.area.toLocaleString()} m²
+                  </td>
+                  <td className="px-6 py-4 text-sm text-secondary">
+                    {parcel.zone}
+                  </td>
+                  <td className="px-6 py-4">
+                    <span className={`px-3 py-1 rounded-md text-xs font-medium ${getTypeColor(parcel.type)}`}>
+                      <TranslatedText text={parcel.type} />
+                    </span>
+                  </td>
+                  <td className="px-6 py-4">
+                    <span className={`px-4 py-1 rounded-full text-xs font-medium ${getOwnershipColor(parcel.ownership)}`}>
+                      <TranslatedText text={parcel.ownership} />
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 text-sm text-secondary">
+                    {parcel.registrationDate}
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
 
-      {/* Pagination Controls */}
-      <div className="px-6 py-4 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div className="text-sm text-secondary">
-          Showing 1 to {currentItems.length} of {totalItems} entries
-        </div>
-        
-        <div className="flex items-center gap-2">
-          <button 
-            className="p-2 border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-50"
-            disabled={currentPage === 1}
-          >
-            <ChevronLeft className="w-4 h-4 text-secondary" />
-          </button>
-          
-          <button className="w-8 h-8 flex items-center justify-center rounded-lg bg-[#4AAA4F] text-white text-sm font-medium">
-            1
-          </button>
-          <button className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 text-secondary text-sm hover:bg-gray-50">
-            2
-          </button>
-          <button className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 text-secondary text-sm hover:bg-gray-50">
-            3
-          </button>
-          <button className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 text-secondary text-sm hover:bg-gray-50">
-            4
-          </button>
-          <button className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 text-secondary text-sm hover:bg-gray-50">
-            5
-          </button>
-          
-          <button className="p-2 border border-gray-200 rounded-lg hover:bg-gray-50">
-            <ChevronRight className="w-4 h-4 text-secondary" />
-          </button>
-        </div>
-      </div>
+      <Pagination 
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+        totalItems={totalItems}
+        itemsPerPage={itemsPerPage}
+        currentItemsCount={currentItems.length}
+      />
     </div>
   );
 }

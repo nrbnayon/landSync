@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
 import { Badge } from "@/components/Dashboard/Shared/Badge";
-import { Pagination } from "@/components/Dashboard/Shared/Pagination";
+import { Pagination } from "@/components/Shared/Pagination";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 

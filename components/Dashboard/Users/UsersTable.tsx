@@ -9,7 +9,7 @@ import { useState } from "react";
 import { DeleteConfirmationModal } from "@/components/Dashboard/Shared/DeleteConfirmationModal";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Pagination } from "@/components/Dashboard/Shared/Pagination";
+import { Pagination } from "@/components/Shared/Pagination";
 import { useEffect } from "react";
 
 interface UsersTableProps {

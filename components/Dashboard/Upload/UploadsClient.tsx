@@ -7,7 +7,7 @@ import { Search } from "lucide-react";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { PlusSignSquareIcon } from "@hugeicons/core-free-icons";
 
-import { Pagination } from "@/components/Dashboard/Shared/Pagination";
+import { Pagination } from "@/components/Shared/Pagination";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { Upload, UploadStatus, UploadType } from "@/types/uploads";
