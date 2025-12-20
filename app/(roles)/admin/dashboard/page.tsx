@@ -5,6 +5,7 @@ import { OwnershipBreakdownChart } from "@/components/Dashboard/Home/OwnershipBr
 import { RightTypeDistributionChart } from "@/components/Dashboard/Home/RightTypeDistributionChart";
 import { MonthlyGrowthTrendChart } from "@/components/Dashboard/Home/MonthlyGrowthTrendChart";
 import { LandDistributionZoneChart } from "@/components/Dashboard/Home/LandDistributionZoneChart";
+import LandParcelsTable from "@/components/Dashboard/Home/LandParcelsTable";
 import { statsData } from "@/data/statsData";
 
 export default function DashboardPage() {
@@ -37,9 +38,14 @@ export default function DashboardPage() {
         </div>
 
         {/* Charts Row 2 - Bar and Line Charts */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           <MonthlyGrowthTrendChart />
           <LandDistributionZoneChart />
+        </div>
+
+        {/* Land Parcels Table */}
+        <div className="mb-8">
+          <LandParcelsTable />
         </div>
       </div>
     </div>
