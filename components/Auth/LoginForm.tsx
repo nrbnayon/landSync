@@ -57,11 +57,6 @@ export default function LoginForm() {
         document.cookie = `refreshToken=dev-refresh-token; expires=${expiresString}; path=/; SameSite=Lax`;
         document.cookie = `userRole=admin; expires=${expiresString}; path=/; SameSite=Lax`;
 
-        // Also set in localStorage for consistency
-        localStorage.setItem("accessToken", "dev-admin-token");
-        localStorage.setItem("refreshToken", "dev-refresh-token");
-        localStorage.setItem("userRole", "admin");
-
         toast.success("Login successful!", {
           description: `Welcome back, ${data.email}!`,
           duration: 2000,
@@ -69,7 +64,7 @@ export default function LoginForm() {
 
         // Redirect to dashboard after a short delay
         setTimeout(() => {
-          router.push("/overview");
+          router.push("/dashboard");
         }, 1000);
       } else {
         // Log the form data to console
@@ -88,7 +83,7 @@ export default function LoginForm() {
 
         // Redirect to dashboard after a short delay
         setTimeout(() => {
-          router.push("/overview");
+          router.push("/dashboard");
         }, 1000);
       }
     } catch (error) {

@@ -1,4 +1,4 @@
-// components/Sidebar.tsx
+// components/Sidebar.tsx - RBAC-enabled Sidebar
 "use client";
 
 import React, {
@@ -17,7 +17,6 @@ import {
   LogOut,
   PanelLeftOpen,
   PanelRightOpen,
-  Search,
   ChevronDown,
   ChevronUp,
   X,
@@ -31,12 +30,14 @@ import {
   GoogleDocIcon,
   ArtificialIntelligence05Icon,
   Settings01Icon,
+  DatabaseIcon,
 } from "@hugeicons/core-free-icons";
 import Link from "next/link";
 
 interface SubLink {
   label: string;
   href: string;
+  roles?: string[]; // Roles that can access this sublink
 }
 
 interface LinkType {
@@ -44,6 +45,7 @@ interface LinkType {
   href: string;
   icon: IconSvgElement;
   subLinks?: SubLink[];
+  roles?: string[]; // Roles that can access this link
 }
 
 interface DashboardWrapperProps {
@@ -60,68 +62,113 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
   const [startWidth, setStartWidth] = useState(0);
   const [, setUserResizedWidth] = useState<number | null>(null);
   const [manualToggle, setManualToggle] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [userRole, setUserRole] = useState<string>("user");
+  const [userName, setUserName] = useState<string>("User");
+  const [userEmail, setUserEmail] = useState<string>("");
   const previousSearchQueryRef = useRef<string>("");
 
   const minWidth = 80;
   const maxWidth = 400;
 
-  // Memoize links array matching the design
+  // Get user role from cookie on component mount
+  useEffect(() => {
+    const getUserRole = () => {
+      const cookies = document.cookie.split(";");
+      const roleCookie = cookies.find((cookie) =>
+        cookie.trim().startsWith("userRole=")
+      );
+      return roleCookie ? roleCookie.split("=")[1] : "user";
+    };
+
+    const getUserEmail = () => {
+      const cookies = document.cookie.split(";");
+      const emailCookie = cookies.find((cookie) =>
+        cookie.trim().startsWith("userEmail=")
+      );
+      return emailCookie ? decodeURIComponent(emailCookie.split("=")[1]) : "";
+    };
+
+    const role = getUserRole();
+    const email = getUserEmail();
+    
+    setUserRole(role);
+    setUserEmail(email);
+
+    // Set user name based on role
+    if (role === "admin") {
+      setUserName("Admin User");
+    } else if (role === "manager") {
+      setUserName("Manager User");
+    } else {
+      setUserName("Regular User");
+    }
+  }, []);
+
+  // Memoize links array with role-based access control
   const links: LinkType[] = useMemo(
     () => [
       {
         label: "Dashboard",
-        href: "/dashboard",
+        href: userRole === "admin" ? "/admin/dashboard" : "/user/dashboard",
         icon: DashboardSquare02Icon,
+        roles: ["admin", "user",], // All roles can access
+      },
+      {
+        label: "Upload Data",
+        href: "/admin/upload-data",
+        icon: GoogleDocIcon,
+        roles: ["admin"], // Only admin can access
       },
       {
         label: "User Management",
-        href: "/users",
+        href: "/admin/users",
         icon: UserGroup03Icon,
+        roles: ["admin"], // Only admin can access
       },
       {
-        label: "Documents",
-        href: "/documents",
-        icon: GoogleDocIcon,
-      },
-      {
-        label: "AI Interaction",
-        href: "/ai-interaction",
+        label: "History",
+        href: "/admin/history",
         icon: ArtificialIntelligence05Icon,
+        roles: ["admin"], // Only admin can access
       },
+
+      // user links
       {
-        label: "Reports",
-        href: "/reports",
+        label: "Data",
+        href: "/user/data",
         icon: WaterfallUp01Icon,
+        roles: ["user"], // User only
       },
+
+      // shared links
       {
         label: "Settings",
         href: "/settings",
         icon: Settings01Icon,
+        roles: ["admin", "user",], // All roles can access
+      },
+      {
+        label: "profile",
+        href: "/profile",
+        icon: Settings01Icon,
+        roles: ["admin", "user",], // All roles can access
       },
     ],
-    []
+    [userRole]
   );
 
-  // Filter links based on search query
+  // Filter links based on user role
   const filteredLinks = useMemo(() => {
-    if (!searchQuery.trim()) return links;
-
     return links.filter((link) => {
-      const mainMatch = link.label
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase());
-
-      const subMatch = link.subLinks?.some((subLink) =>
-        subLink.label.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-
-      return mainMatch || subMatch;
+      // If no roles specified, show to everyone
+      if (!link.roles || link.roles.length === 0) return true;
+      // Check if user's role is in the allowed roles
+      return link.roles.includes(userRole);
     });
-  }, [searchQuery, links]);
+  }, [links, userRole]);
 
   // Check if current path matches link or its sublinks (including dynamic routes)
   const isLinkActive = useCallback(
@@ -159,7 +206,7 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
 
   // Auto-expand items if their sublink is active
   useEffect(() => {
-    links.forEach((link) => {
+    filteredLinks.forEach((link) => {
       if (
         link.subLinks &&
         link.subLinks.some(
@@ -172,44 +219,7 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
         }
       }
     });
-  }, [pathname, links, expandedItems]);
-
-  // Auto-expand items when search matches sublinks
-  useEffect(() => {
-    // Only process if search query actually changed
-    if (searchQuery.trim() && searchQuery !== previousSearchQueryRef.current) {
-      previousSearchQueryRef.current = searchQuery;
-      const itemsToExpand: string[] = [];
-      links.forEach((link) => {
-        if (link.subLinks) {
-          const hasMatchingSubLink = link.subLinks.some((subLink) =>
-            subLink.label.toLowerCase().includes(searchQuery.toLowerCase())
-          );
-          if (hasMatchingSubLink) {
-            itemsToExpand.push(link.label);
-          }
-        }
-      });
-      // Only update if there are new items to expand
-      if (itemsToExpand.length > 0) {
-        setExpandedItems((prev) => {
-          const newSet = new Set([...prev, ...itemsToExpand]);
-          const newArray = Array.from(newSet);
-          // Only update if the array actually changed
-          if (
-            newArray.length === prev.length &&
-            newArray.every((item, idx) => item === prev[idx])
-          ) {
-            return prev;
-          }
-          return newArray;
-        });
-      }
-    } else if (!searchQuery.trim()) {
-      previousSearchQueryRef.current = "";
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchQuery]);
+  }, [pathname, filteredLinks, expandedItems]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     setIsResizing(true);
@@ -259,8 +269,6 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
   // Handle width update after resizing completes
   useEffect(() => {
     if (!isResizing && manualToggle) {
-      // Defer state update to avoid synchronous setState in effect
-      // This is necessary to wait for resizing to complete before updating width
       const timeoutId = setTimeout(() => {
         if (open) {
           setSidebarWidth(220);
@@ -276,7 +284,6 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
   }, [open, isResizing, manualToggle, minWidth]);
 
   const handleToggleClick = () => {
-    // If not resizing, update width immediately
     if (!isResizing) {
       const newOpen = !open;
       if (newOpen) {
@@ -287,7 +294,6 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
       }
       setOpen(newOpen);
     } else {
-      // If resizing, use the effect to handle it after resizing completes
       setManualToggle(true);
       setOpen(!open);
     }
@@ -306,6 +312,8 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
       "refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     document.cookie =
       "userRole=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie =
+      "userEmail=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 
     console.log("User logged out successfully");
     setShowLogoutModal(false);
@@ -333,6 +341,34 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
       />
     );
   }, []);
+
+  // Get role badge color
+  const getRoleBadgeColor = (role: string) => {
+    switch (role) {
+      case "admin":
+        return "text-red-600";
+      case "manager":
+        return "text-blue-600";
+      case "user":
+        return "text-green-600";
+      default:
+        return "text-secondary";
+    }
+  };
+
+  // Get role display name
+  const getRoleDisplayName = (role: string) => {
+    switch (role) {
+      case "admin":
+        return "Super Admin";
+      case "manager":
+        return "Manager";
+      case "user":
+        return "User";
+      default:
+        return "User";
+    }
+  };
 
   return (
     <div
@@ -369,18 +405,12 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
 
                   const filteredSubLinks = link.subLinks?.filter(
                     (subLink) =>
-                      !searchQuery.trim() ||
-                      subLink.label
-                        .toLowerCase()
-                        .includes(searchQuery.toLowerCase()) ||
-                      link.label
-                        .toLowerCase()
-                        .includes(searchQuery.toLowerCase())
+                      !subLink.roles || subLink.roles.includes(userRole)
                   );
 
                   const shouldShowSublinks =
                     hasSubLinks &&
-                    (isExpanded || (isHovered && !searchQuery.trim())) &&
+                    (isExpanded || isHovered) &&
                     open &&
                     filteredSubLinks &&
                     filteredSubLinks.length > 0;
@@ -517,18 +547,22 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
               {/* User Profile */}
               <div className="mt-4 pt-4 border-t border-border">
                 <div className="flex items-center gap-3 px-3">
-                  <Link 
-                    href="/profile" 
+                  <Link
+                    href="/profile"
                     onClick={() => {
-                        if (window.innerWidth < 768) {
-                          setOpen(false);
-                        }
-                      }}
-                    className="flex items-center gap-3 flex-1 min-w-0 hover:opacity-80 transition-opacity">
+                      if (window.innerWidth < 768) {
+                        setOpen(false);
+                      }
+                    }}
+                    className="flex items-center gap-3 flex-1 min-w-0 hover:opacity-80 transition-opacity"
+                  >
                     <div className="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center shrink-0">
-                     <div className="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center shrink-0">
-                      <Image src="/images/avatar.png" alt="User" width={40} height={40} />
-                     </div>
+                      <Image
+                        src="/images/avatar.png"
+                        alt="User"
+                        width={40}
+                        height={40}
+                      />
                     </div>
                     <motion.div
                       animate={{
@@ -538,10 +572,10 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
                       className="flex-1 min-w-0"
                     >
                       <p className="text-base font-medium truncate">
-                        Nayon
+                        {userName}
                       </p>
-                      <p className="text-base text-secondary truncate">
-                        Super Admin
+                      <p className={cn("text-sm truncate", getRoleBadgeColor(userRole))}>
+                        {getRoleDisplayName(userRole)}
                       </p>
                     </motion.div>
                   </Link>
@@ -672,7 +706,7 @@ const Logo = ({ open }: { open: boolean }) => {
 
 const Dashboard = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="flex flex-1 bg-primary">
+    <div className="flex flex-1 bg-gray">
       <div className="p-0 flex flex-col gap-2 flex-1 w-full overflow-y-auto overflow-x-hidden scrollbar-custom scrollbar-thin">
         {children}
       </div>

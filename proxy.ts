@@ -1,4 +1,4 @@
-// middleware.ts - Next.js v16 Simple Proxy Middleware
+// proxy.ts - Next.js v16 Role-based Access Control Middleware
 import { NextRequest, NextResponse } from "next/server";
 import { JWTPayload, jwtVerify } from "jose";
 
@@ -9,21 +9,44 @@ import { JWTPayload, jwtVerify } from "jose";
 // Public routes (no authentication required)
 const PUBLIC_ROUTES = [
   "/",
-  "/about",
-  "/contact",
-  "/pricing",
   "/login",
-  "/signup",
+  "/register",
   "/forgot-password",
   "/reset-password",
   "/verify-email",
+  "/terms",
+  "/privacy-policy",
 ];
 
-// Protected routes (authentication required)
-const PROTECTED_ROUTES = ["/dashboard", "/profile", "/settings", "/admin"];
+// Common protected routes (accessible by all authenticated users)
+const COMMON_PROTECTED_ROUTES = ["/dashboard", "/profile", "/settings"];
 
-// Admin-only routes (requires admin role)
-const ADMIN_ROUTES = ["/admin"];
+// Role-specific routes configuration
+const ROLE_ROUTES = {
+  admin: ["/admin", "/admin/dashboard","/admin/upload-data", "/admin/users", "/admin/history"],
+  user: ["/user/dashboard", "/user/data"],
+  // manager: [
+  //   "/manager/dashboard",
+  //   "/manager/team",
+  //   "/manager/reports",
+  //   "/documents", // Manager can access documents
+  //   "/reports", // Manager can access reports
+  //   "/ai-interaction", // Manager can access AI
+  // ],
+  // Add more roles as needed
+};
+
+// Routes that multiple roles can access (shared access)
+const SHARED_ROUTES = {
+  "/settings": ["admin", "user"], // All roles can access
+  "/profile": ["admin", "user"], // All roles can access
+};
+
+// Default redirect paths for each role after login
+const ROLE_DEFAULT_PATHS = {
+  admin: "/admin/dashboard",
+  user: "/user/dashboard",
+};
 
 // JWT Secret - Use environment variable in production
 const JWT_SECRET = new TextEncoder().encode(
@@ -60,6 +83,68 @@ function matchesRoute(pathname: string, routes: string[]): boolean {
   });
 }
 
+/**
+ * Check if a user role has access to a specific path
+ */
+function hasRoleAccess(pathname: string, userRole: string): boolean {
+  // Check if it's a common protected route (accessible by all authenticated users)
+  if (matchesRoute(pathname, COMMON_PROTECTED_ROUTES)) {
+    return true;
+  }
+
+  // Check if it's a shared route
+  for (const [route, allowedRoles] of Object.entries(SHARED_ROUTES)) {
+    if (pathname === route || pathname.startsWith(route + "/")) {
+      return allowedRoles.includes(userRole);
+    }
+  }
+
+  // Check role-specific routes
+  const roleRoutes = ROLE_ROUTES[userRole as keyof typeof ROLE_ROUTES] || [];
+  return matchesRoute(pathname, roleRoutes);
+}
+
+/**
+ * Get the appropriate redirect path for a role
+ */
+function getRoleDefaultPath(userRole: string): string {
+  return (
+    ROLE_DEFAULT_PATHS[userRole as keyof typeof ROLE_DEFAULT_PATHS] ||
+    "/dashboard"
+  );
+}
+
+/**
+ * Check if the route requires authentication
+ */
+function isProtectedRoute(pathname: string): boolean {
+  // Check if it's a public route
+  if (matchesRoute(pathname, PUBLIC_ROUTES)) {
+    return false;
+  }
+
+  // Check if it's a common protected route
+  if (matchesRoute(pathname, COMMON_PROTECTED_ROUTES)) {
+    return true;
+  }
+
+  // Check if it's in any role-specific routes
+  for (const routes of Object.values(ROLE_ROUTES)) {
+    if (matchesRoute(pathname, routes)) {
+      return true;
+    }
+  }
+
+  // Check if it's a shared route
+  for (const route of Object.keys(SHARED_ROUTES)) {
+    if (pathname === route || pathname.startsWith(route + "/")) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 // ============================================
 // MAIN PROXY FUNCTION (Next.js v16)
 // ============================================
@@ -67,7 +152,7 @@ function matchesRoute(pathname: string, routes: string[]): boolean {
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Skip middleware for static files
+  // Skip middleware for static files and API routes
   if (
     pathname.startsWith("/_next/") ||
     pathname.startsWith("/api/") ||
@@ -100,6 +185,18 @@ export async function proxy(request: NextRequest) {
       if (!userRole) {
         userRole = "admin";
       }
+    } else if (isDevelopment && accessToken === "dev-user-token") {
+      user = { email: "user@gmail.com", role: "user" };
+      isAuthenticated = true;
+      if (!userRole) {
+        userRole = "user";
+      }
+    } else if (isDevelopment && accessToken === "dev-manager-token") {
+      user = { email: "manager@gmail.com", role: "manager" };
+      isAuthenticated = true;
+      if (!userRole) {
+        userRole = "manager";
+      }
     } else {
       // Production mode: Verify JWT token
       user = await verifyToken(accessToken);
@@ -112,27 +209,21 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  // Determine if user is admin
-  const isAdmin = userRole === "admin" || user?.role === "admin";
-
-  console.log("✅ Auth Status:", { isAuthenticated, userRole, isAdmin });
+  console.log("✅ Auth Status:", { isAuthenticated, userRole, user });
 
   // ============================================
-  // STEP 3: Route matching
+  // STEP 3: Public routes handling
   // ============================================
   const isPublicRoute = matchesRoute(pathname, PUBLIC_ROUTES);
-  const isProtectedRoute = matchesRoute(pathname, PROTECTED_ROUTES);
-  const isAdminRoute = matchesRoute(pathname, ADMIN_ROUTES);
 
-  // ============================================
-  // STEP 4: Access control logic
-  // ============================================
-
-  // Public routes - always allow
   if (isPublicRoute) {
-    // If authenticated user visits login/signup, redirect to dashboard
-    if (isAuthenticated && (pathname === "/login" || pathname === "/signup")) {
-      return NextResponse.redirect(new URL("/dashboard", request.url));
+    // If authenticated user visits login/register, redirect to their role's default page
+    if (
+      isAuthenticated &&
+      (pathname === "/login" || pathname === "/register")
+    ) {
+      const defaultPath = getRoleDefaultPath(userRole || "user");
+      return NextResponse.redirect(new URL(defaultPath, request.url));
     }
 
     const response = NextResponse.next();
@@ -144,8 +235,12 @@ export async function proxy(request: NextRequest) {
     return response;
   }
 
-  // Protected routes - require authentication
-  if (isProtectedRoute || isAdminRoute) {
+  // ============================================
+  // STEP 4: Protected routes handling
+  // ============================================
+  const requiresAuth = isProtectedRoute(pathname);
+
+  if (requiresAuth) {
     // Not authenticated - redirect to login
     if (!isAuthenticated) {
       const loginUrl = new URL("/login", request.url);
@@ -154,13 +249,14 @@ export async function proxy(request: NextRequest) {
       return NextResponse.redirect(loginUrl);
     }
 
-    // Admin routes - require admin role
-    if (isAdminRoute && !isAdmin) {
-      console.log("❌ Forbidden - Not admin");
-      return NextResponse.redirect(new URL("/dashboard", request.url));
+    // Check if user has role-based access
+    if (!hasRoleAccess(pathname, userRole || "")) {
+      console.log("❌ Forbidden - User role does not have access");
+      const defaultPath = getRoleDefaultPath(userRole || "user");
+      return NextResponse.redirect(new URL(defaultPath, request.url));
     }
 
-    // Authenticated - allow access
+    // Authenticated and authorized - allow access
     console.log("✅ Authorized - Access granted");
     const response = NextResponse.next();
     // Add security headers
