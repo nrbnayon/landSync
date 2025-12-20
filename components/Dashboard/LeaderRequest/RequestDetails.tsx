@@ -659,7 +659,7 @@ export function RequestDetails({ id }: { id: string }) {
         <Button
           onClick={handleSave}
           disabled={isSaving}
-          className="bg-gradient-red hover:bg-gradient-red-hover text-white"
+          className="bg-gradient-green hover:bg-gradient-green-hover text-white"
         >
           {isSaving ? "Saving..." : "Save Project"}
         </Button>

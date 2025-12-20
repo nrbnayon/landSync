@@ -717,7 +717,7 @@ export function UploadDetails({ id }: { id: string }) {
         <Button
           type="submit"
           disabled={isSaving || isSubmitting}
-          className="bg-gradient-red hover:bg-gradient-red-hover text-white"
+          className="bg-gradient-green hover:bg-gradient-green-hover text-white"
         >
           {isSaving || isSubmitting ? (
             <>

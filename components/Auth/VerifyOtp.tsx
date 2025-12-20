@@ -287,7 +287,7 @@ export default function VerifyOtp() {
               {/* Verify Button */}
               <Button
                 type="submit"
-                className="w-full h-10 sm:h-12 bg-gradient-red hover:bg-gradient-red-hover text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed focus:ring-2 focus:ring-indigo-500/20 text-sm sm:text-base"
+                className="w-full h-10 sm:h-12 bg-gradient-green hover:bg-gradient-green-hover text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed focus:ring-2 focus:ring-indigo-500/20 text-sm sm:text-base"
                 disabled={
                   isLoading ||
                   isSubmitting ||

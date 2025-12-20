@@ -6,7 +6,6 @@ import React, {
   useState,
   useMemo,
   useCallback,
-  useRef,
 } from "react";
 import { Sidebar, SidebarBody } from "@/components/ui/sidebar";
 import { motion } from "motion/react";
@@ -27,10 +26,9 @@ import {
   DashboardSquare02Icon,
   UserGroup03Icon,
   WaterfallUp01Icon,
-  GoogleDocIcon,
-  ArtificialIntelligence05Icon,
+  CloudUploadIcon,
+  Clock05Icon,
   Settings01Icon,
-  DatabaseIcon,
 } from "@hugeicons/core-free-icons";
 import Link from "next/link";
 
@@ -68,7 +66,6 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
   const [userRole, setUserRole] = useState<string>("user");
   const [userName, setUserName] = useState<string>("User");
   const [userEmail, setUserEmail] = useState<string>("");
-  const previousSearchQueryRef = useRef<string>("");
 
   const minWidth = 80;
   const maxWidth = 400;
@@ -119,7 +116,7 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
       {
         label: "Upload Data",
         href: "/admin/upload-data",
-        icon: GoogleDocIcon,
+        icon: CloudUploadIcon,
         roles: ["admin"], // Only admin can access
       },
       {
@@ -131,7 +128,7 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
       {
         label: "History",
         href: "/admin/history",
-        icon: ArtificialIntelligence05Icon,
+        icon: Clock05Icon,
         roles: ["admin"], // Only admin can access
       },
 
@@ -147,12 +144,6 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
       {
         label: "Settings",
         href: "/settings",
-        icon: Settings01Icon,
-        roles: ["admin", "user",], // All roles can access
-      },
-      {
-        label: "profile",
-        href: "/profile",
         icon: Settings01Icon,
         roles: ["admin", "user",], // All roles can access
       },
@@ -336,7 +327,7 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
           "h-6 w-6 shrink-0 transition-colors duration-200",
           isActive
             ? "text-white font-bold"
-            : "text-white group-hover:text-primary"
+            : "text-[#0E2C48] group-hover:text-[#0E2C48]"
         )}
       />
     );
@@ -373,7 +364,7 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
   return (
     <div
       className={cn(
-        "rounded-md flex flex-col md:flex-row bg-primary w-full flex-1 mx-auto",
+        "rounded-md flex flex-col md:flex-row bg-gray w-full flex-1 mx-auto",
         "h-screen overflow-hidden relative"
       )}
     >
@@ -386,8 +377,8 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
         >
           <SidebarBody
             className={cn(
-              "justify-between gap-10 border-0.5 border-r border-border",
-              "bg-background text-white"
+              "justify-between gap-10 border-0.5 border-r border-gray-200",
+              "bg-white text-[#0E2C48]"
             )}
           >
             <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
@@ -446,8 +437,8 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
                           className={cn(
                             "flex items-center gap-3 p-3 rounded-md transition-all duration-200 group flex-1 relative",
                             isActive
-                              ? "bg-gradient-purple text-white font-bold"
-                              : "hover:text-primary hover:bg-gray-50"
+                              ? "bg-primary text-white font-bold"
+                              : "hover:text-foreground hover:bg-primary/30"
                           )}
                         >
                           <span className="shrink-0">
@@ -545,7 +536,7 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
             {/* Bottom Section */}
             <div>
               {/* User Profile */}
-              <div className="mt-4 pt-4 border-t border-border">
+              <div className="mt-4 pt-4 border-t border-gray-200">
                 <div className="flex items-center gap-3 px-3">
                   <Link
                     href="/profile"
@@ -608,7 +599,7 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
         <button
           onClick={handleToggleClick}
           className={cn(
-            "absolute hidden md:flex top-4 z-80 cursor-pointer p-2 rounded-full bg-primary border border-gray-300 shadow-lg hover:bg-gray-50 transition-all duration-200",
+            "absolute hidden md:flex top-4 z-80 cursor-pointer p-2 rounded-full bg-gray border border-gray-300 shadow-lg hover:bg-gray-50 transition-all duration-200",
             open ? "-right-3" : "-right-3"
           )}
         >
@@ -633,7 +624,7 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="relative bg-primary rounded-xl shadow-2xl border border-gray-200 p-6 w-full max-w-md mx-4"
+            className="relative bg-card rounded-xl shadow-2xl border border-gray-200 p-6 w-full max-w-md mx-4"
           >
             <button
               onClick={handleCancelLogout}
@@ -659,13 +650,13 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
               <div className="flex gap-3 justify-center">
                 <button
                   onClick={handleCancelLogout}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 rounded-lg transition-colors duration-200"
+                  className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 rounded-lg transition-colors duration-200 cursor-pointer border"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleConfirmLogout}
-                  className="px-4 py-2 text-sm font-medium text-white bg-gradient-red rounded-lg transition-colors duration-200"
+                  className="px-4 py-2 text-sm font-medium text-white bg-gradient-green rounded-lg transition-colors duration-200 cursor-pointer hover:bg-gradient-green-hover"
                 >
                   Logout
                 </button>

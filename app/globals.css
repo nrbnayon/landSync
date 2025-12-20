@@ -135,12 +135,12 @@
     background: linear-gradient(257.19deg, #6a24ce 2.86%, #965ee5 93.65%);
   }
 
-  .bg-gradient-red {
+  .bg-gradient-green {
     background: linear-gradient(180deg, #1C9611 0%, #1C9611 98.96%);
   }
 
-  .hover\:bg-gradient-red-hover:hover {
-    background: linear-gradient(180deg, #158d0aff 0%, #12750aff 100%);
+  .hover\:bg-gradient-green-hover:hover {
+    background: linear-gradient(180deg, #158d0aff 0%, #143f10ff 100%);
   }
 
   .bg-gray {

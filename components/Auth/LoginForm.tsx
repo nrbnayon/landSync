@@ -42,29 +42,48 @@ export default function LoginForm() {
       // Simulate API call delay
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
-      // Development dummy credentials check
-      const isDevLogin =
-        data.email === "admin@gmail.com" && data.password === "admin";
+      // Development dummy credentials check with role assignment
+      const isDummyLogin =
+        (data.email === "admin@gmail.com" && data.password === "admin") ||
+        (data.email === "manager@gmail.com" && data.password === "manager") ||
+        (data.email === "user@gmail.com" && data.password === "user");
 
-      if (isDevLogin) {
+      if (isDummyLogin) {
         // Set development cookies for dummy login
         const expires = new Date();
         expires.setTime(expires.getTime() + 7 * 24 * 60 * 60 * 1000); // 7 days
         const expiresString = expires.toUTCString();
 
+        // Determine user role based on email
+        let userRole = "user";
+        if (data.email === "admin@gmail.com") {
+          userRole = "admin";
+        } else if (data.email === "manager@gmail.com") {
+          userRole = "manager";
+        } else if (data.email === "user@gmail.com") {
+          userRole = "user";
+        }
+
         // Set cookies
-        document.cookie = `accessToken=dev-admin-token; expires=${expiresString}; path=/; SameSite=Lax`;
+        document.cookie = `accessToken=dev-${userRole}-token; expires=${expiresString}; path=/; SameSite=Lax`;
         document.cookie = `refreshToken=dev-refresh-token; expires=${expiresString}; path=/; SameSite=Lax`;
-        document.cookie = `userRole=admin; expires=${expiresString}; path=/; SameSite=Lax`;
+        document.cookie = `userRole=${userRole}; expires=${expiresString}; path=/; SameSite=Lax`;
+        document.cookie = `userEmail=${encodeURIComponent(data.email)}; expires=${expiresString}; path=/; SameSite=Lax`;
 
         toast.success("Login successful!", {
           description: `Welcome back, ${data.email}!`,
           duration: 2000,
         });
 
-        // Redirect to dashboard after a short delay
+        // Redirect based on user role
         setTimeout(() => {
-          router.push("/dashboard");
+          if (userRole === "admin") {
+            router.push("/admin/dashboard");
+          } else if (userRole === "manager") {
+            router.push("/manager/dashboard");
+          } else {
+            router.push("/user/dashboard");
+          }
         }, 1000);
       } else {
         // Log the form data to console
@@ -75,15 +94,25 @@ export default function LoginForm() {
           timestamp: new Date().toISOString(),
         });
 
-        // Simulate successful login
+        // Simulate successful login for other credentials (default to user role)
+        const expires = new Date();
+        expires.setTime(expires.getTime() + 7 * 24 * 60 * 60 * 1000); // 7 days
+        const expiresString = expires.toUTCString();
+
+        // Set cookies with user role as default
+        document.cookie = `accessToken=dev-user-token; expires=${expiresString}; path=/; SameSite=Lax`;
+        document.cookie = `refreshToken=dev-refresh-token; expires=${expiresString}; path=/; SameSite=Lax`;
+        document.cookie = `userRole=user; expires=${expiresString}; path=/; SameSite=Lax`;
+        document.cookie = `userEmail=${encodeURIComponent(data.email)}; expires=${expiresString}; path=/; SameSite=Lax`;
+
         toast.success("Login successful!", {
           description: `Welcome back, ${data.email}!`,
           duration: 2000,
         });
 
-        // Redirect to dashboard after a short delay
+        // Redirect to user dashboard
         setTimeout(() => {
-          router.push("/dashboard");
+          router.push("/user/dashboard");
         }, 1000);
       }
     } catch (error) {
@@ -212,7 +241,7 @@ export default function LoginForm() {
               {/* Login Button */}
               <Button
                 type="submit"
-                className="w-full h-10 sm:h-12 bg-gradient-red hover:bg-gradient-red-hover text-white rounded-md disabled:opacity-50 disabled:cursor-not-allowed focus:ring-2 focus:ring-indigo-500/20 text-sm sm:text-base"
+                className="w-full h-10 sm:h-12 bg-gradient-green hover:bg-gradient-green-hover text-white rounded-md disabled:opacity-50 disabled:cursor-not-allowed focus:ring-2 focus:ring-indigo-500/20 text-sm sm:text-base"
                 disabled={isLoading || isSubmitting}
               >
                 {isLoading ? (
