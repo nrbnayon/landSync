@@ -11,14 +11,13 @@ import { Sidebar, SidebarBody } from "@/components/ui/sidebar";
 import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import {
   LogOut,
   PanelLeftOpen,
   PanelRightOpen,
   ChevronDown,
   ChevronUp,
-  X,
 } from "lucide-react";
 import { HugeiconsIcon } from "@hugeicons/react";
 import type { IconSvgElement } from "@hugeicons/react";
@@ -31,6 +30,8 @@ import {
   Settings01Icon,
 } from "@hugeicons/core-free-icons";
 import Link from "next/link";
+import { useLogout } from "@/hooks/useLogout";
+import LogoutModal from "../Shared/LogoutModal";
 
 interface SubLink {
   label: string;
@@ -52,7 +53,7 @@ interface DashboardWrapperProps {
 
 export default function DashboardWrapper({ children }: DashboardWrapperProps) {
   const pathname = usePathname();
-  const router = useRouter();
+  const { logout } = useLogout();
   const [open, setOpen] = useState(true);
   const [sidebarWidth, setSidebarWidth] = useState(250);
   const [isResizing, setIsResizing] = useState(false);
@@ -293,24 +294,6 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
   // Handle logout functionality
   const handleLogoutClick = () => {
     setShowLogoutModal(true);
-  };
-
-  const handleConfirmLogout = () => {
-    // Clear cookies
-    document.cookie =
-      "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    document.cookie =
-      "refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    document.cookie =
-      "userRole=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    document.cookie =
-      "userEmail=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-
-    console.log("User logged out successfully");
-    setShowLogoutModal(false);
-
-    // Redirect to login
-    router.push("/login");
   };
 
   const handleCancelLogout = () => {
@@ -612,64 +595,17 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
       </div>
 
       {/* Logout Confirmation Modal */}
-      {showLogoutModal && (
-        <div className="fixed inset-0 z-100 flex items-center justify-center">
-          <div
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm"
-            onClick={handleCancelLogout}
-          />
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.2 }}
-            className="relative bg-card rounded-xl shadow-2xl border border-gray-200 p-6 w-full max-w-md mx-4"
-          >
-            <button
-              onClick={handleCancelLogout}
-              className="absolute top-4 right-4 p-1 rounded-full hover:bg-gray-100 transition-colors duration-200"
-            >
-              <X className="h-5 w-5 text-destructive" />
-            </button>
-
-            <div className="text-center">
-              <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
-                <LogOut className="h-6 w-6 text-red-600" />
-              </div>
-
-              <h3 className="text-lg font-semibold text-primary mb-2">
-                Confirm Logout
-              </h3>
-
-              <p className="text-sm text-secondary mb-6">
-                Are you sure you want to log out? You will need to sign in again
-                to access your account.
-              </p>
-
-              <div className="flex gap-3 justify-center">
-                <button
-                  onClick={handleCancelLogout}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 rounded-lg transition-colors duration-200 cursor-pointer border"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleConfirmLogout}
-                  className="px-4 py-2 text-sm font-medium text-white bg-gradient-green rounded-lg transition-colors duration-200 cursor-pointer hover:bg-gradient-green-hover"
-                >
-                  Logout
-                </button>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      )}
+      <LogoutModal
+        isOpen={showLogoutModal}
+        onClose={handleCancelLogout}
+        onConfirm={logout}
+      />
 
       <Dashboard>{children}</Dashboard>
     </div>
   );
 }
+
 
 const Logo = ({ open }: { open: boolean }) => {
   return (

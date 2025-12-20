@@ -1,5 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
+import { ChevronDown } from "lucide-react";
+// import { useLogout } from "@/hooks/useLogout";
+// import { useState } from "react";
 
 export default function DashboardHeader({
     title,
@@ -8,6 +11,8 @@ export default function DashboardHeader({
     title: string;
     description?: string;
 }) {
+    // const { logout } = useLogout();
+    // const [showLogoutModal, setShowLogoutModal] = useState(false);
     return (
         <div className="border-b border-border flex justify-between items-center">
             <div className="flex flex-col items-start justify-between p-4 md:px-8">
@@ -33,6 +38,32 @@ export default function DashboardHeader({
                   </Link>
                 </div>
             </div>
+            <div className="flex items-center gap-4 px-4 h-full">
+                {/* Language Switcher */}
+                <div className="hidden md:flex items-center justify-between px-3 py-2 border rounded-md min-w-[120px] cursor-pointer hover:bg-gray-50 bg-white">
+                    <div className="flex items-center gap-2">
+                         <span className="text-sm">English</span>
+                    </div>
+                     <ChevronDown className="h-4 w-4 text-gray-500" />
+                </div>
+
+                {/* Logout Button */}
+                {/* <button
+                    onClick={() => setShowLogoutModal(true)}
+                    className="hidden md:flex items-center gap-2 px-4 py-2 bg-red-100 text-red-600 rounded-md hover:bg-red-200 transition-colors"
+                >
+                    <LogOut className="h-4 w-4" />
+                    <span className="text-sm font-medium">Log Out</span>
+                </button> */}
+
+
+            </div>
+
+            {/* <LogoutModal
+                isOpen={showLogoutModal}
+                onClose={() => setShowLogoutModal(false)}
+                onConfirm={logout}
+            /> */}
         </div>
     )
 }
