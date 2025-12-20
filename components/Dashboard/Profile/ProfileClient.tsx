@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Eye, EyeOff, Pencil } from "lucide-react";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
+import TranslatedText from "@/components/Shared/TranslatedText";
 
 interface UserProfile {
   name: string;
@@ -177,10 +178,10 @@ export default function ProfileClient() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-50">
-            {user.role}
+           <TranslatedText text={user.role} />
           </h1>
           <p className="text-sm text-gray-500   mt-1">
-            Track, manage and forecast your customers and Donations.
+            <TranslatedText text="Track, manage and forecast your customers and Donations." />
           </p>
         </div>
         
@@ -225,7 +226,7 @@ export default function ProfileClient() {
               {user.name}
             </h2>
             <p className="text-sm text-gray-500  ">
-              Update your username and manage your account
+             <TranslatedText text="Update your username and manage your account" />
             </p>
           </div>
         </div>
@@ -234,7 +235,7 @@ export default function ProfileClient() {
           {/* Section Title */}
           <div className="w-full md:w-48 shrink-0">
             <h3 className="font-semibold text-gray-900 dark:text-gray-50">
-              Account Settings
+              <TranslatedText text="Account Settings" />
             </h3>
           </div>
 
@@ -245,7 +246,7 @@ export default function ProfileClient() {
               <div className="flex justify-between items-start gap-4">
                 <div className="w-full">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                    Your name
+                    <TranslatedText text="Your name" />
                   </label>
                   
                   {isEditingName ? (
@@ -256,7 +257,7 @@ export default function ProfileClient() {
                       
                       <div className="space-y-2">
                         <label className="text-xs font-medium text-gray-600  ">
-                          Full name
+                          <TranslatedText text="Full name" />
                         </label>
                         <Input
                           value={editNameValue}
@@ -266,7 +267,7 @@ export default function ProfileClient() {
                           maxLength={32}
                         />
                         <div className="text-right text-xs text-gray-400">
-                          text limit {editNameValue.length}/32
+                          <TranslatedText text="text limit" /> {editNameValue.length}/32  
                         </div>
                       </div>
 
@@ -277,14 +278,14 @@ export default function ProfileClient() {
                           onClick={handleCancelName}
                           className="bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
                         >
-                          Cancel
+                          <TranslatedText text="Cancel" />
                         </Button>
                         <Button
                           type="button"
                           onClick={handleSaveName}
                           className="bg-gray-900 text-white hover:bg-gray-800 dark:bg-gray-600 dark:hover:bg-gray-500"
                         >
-                          Save
+                          <TranslatedText text="Save" />
                         </Button>
                       </div>
                     </div>
