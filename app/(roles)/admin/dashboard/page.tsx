@@ -1,22 +1,22 @@
-// ===== app/(dashboard)/dashboard/page.tsx =====
+// app/(dashboard)/dashboard/page.tsx
 import DashboardHeader from "@/components/Dashboard/Shared/DashboardHeader";
 import { StatsCard } from "@/components/Dashboard/Shared/StatsCard";
-import { WeeklyActivityChart } from "@/components/Dashboard/Home/WeeklyActivityChart";
-import { ClaimsTrendChart } from "@/components/Dashboard/Home/ClaimsTrendChart";
-import { PendingClaimsList } from "@/components/Dashboard/Home/PendingClaimsList";
-import { RecentActivityList } from "@/components/Dashboard/Home/RecentActivityList";
+import { OwnershipBreakdownChart } from "@/components/Dashboard/Home/OwnershipBreakdownChart";
+import { RightTypeDistributionChart } from "@/components/Dashboard/Home/RightTypeDistributionChart";
+import { MonthlyGrowthTrendChart } from "@/components/Dashboard/Home/MonthlyGrowthTrendChart";
+import { LandDistributionZoneChart } from "@/components/Dashboard/Home/LandDistributionZoneChart";
 import { statsData } from "@/data/statsData";
 
 export default function DashboardPage() {
   return (
     <div className="min-h-screen">
       <DashboardHeader 
-        title="Admin Dashboard" 
-        description="Welcome back! Here's an overview of your platform." 
+        title="Land Management Dashboard" 
+        description="Overview of all land parcels and their classifications" 
       />
       
-      {/* Stats Cards */}
-     <div className="p-4 md:p-8">
+      <div className="p-4 md:p-8">
+        {/* Stats Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
           {statsData.map((stat, index) => (
             <StatsCard
@@ -30,16 +30,16 @@ export default function DashboardPage() {
           ))}
         </div>
 
-        {/* Charts Row */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          <WeeklyActivityChart />
-          <ClaimsTrendChart />
+        {/* Charts Row 1 - Pie Charts */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <OwnershipBreakdownChart />
+          <RightTypeDistributionChart />
         </div>
 
-        {/* Lists Row */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          <PendingClaimsList />
-          <RecentActivityList />
+        {/* Charts Row 2 - Bar and Line Charts */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <MonthlyGrowthTrendChart />
+          <LandDistributionZoneChart />
         </div>
       </div>
     </div>

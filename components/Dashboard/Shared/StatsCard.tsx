@@ -22,25 +22,26 @@ export function StatsCard({
   return (
     <div
       className={cn(
-        "bg-white px-5 py-4 rounded-2xl flex items-center justify-between h-full border border-border",
+        "bg-white px-5 py-6 rounded-2xl flex items-center justify-between h-full border border-border hover:bg-gray-50 transition-colors cursor-pointer hover:shadow-lg",
         className
       )}
     >
       <div className="flex flex-col justify-center gap-1">
-        <h3 className="text-gray-600 text-sm font-normal">{title}</h3>
-        <div className="text-2xl font-semibold text-gray-900">{value}</div>
-        {subtitle && (
-          <div className="text-xs text-gray-500">{subtitle}</div>
+        <h3 className="text-secondary text-sm font-medium">{title}</h3>
+        <div className="text-2xl font-semibold text-foreground">{value}
+          {subtitle && (
+          <span className="text-xs text-secondary ml-1">{subtitle}</span>
         )}
+        </div>
       </div>
       
       <div
-        className="flex items-center justify-center rounded-2xl p-3.5"
+        className="flex items-center justify-center rounded-lg p-3"
         style={{ backgroundColor: iconBgColor }}
       >
         <HugeiconsIcon
           icon={icon}
-          size={28}
+          size={24}
           className="text-white"
           strokeWidth={2}
         />
