@@ -48,9 +48,9 @@ export default function DashboardHeader({
     // const { logout } = useLogout();
     // const [showLogoutModal, setShowLogoutModal] = useState(false);
     return (
-        <div className="border-b border-border flex justify-between items-center">
+        <div className="bg-white flex justify-between items-center">
             <div className="flex flex-col items-start justify-between p-4 md:px-8">
-                <h1 className="text-2xl font-bold text-foreground">
+                <h1 className="text-2xl font-bold text-[#0F304E]">
                     <TranslatedText text={title} />
                 </h1>
                 {description && (

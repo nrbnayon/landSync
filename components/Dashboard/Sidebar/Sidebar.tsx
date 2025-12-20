@@ -32,6 +32,7 @@ import {
 import Link from "next/link";
 import { useLogout } from "@/hooks/useLogout";
 import LogoutModal from "../Shared/LogoutModal";
+import TranslatedText from "@/components/Shared/TranslatedText";
 
 interface SubLink {
   label: string;
@@ -434,7 +435,7 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
                             }}
                             className="text-md"
                           >
-                            {link.label}
+                           <TranslatedText text={link.label} />
                           </motion.span>
 
                           {/* Expand/Collapse Button */}

@@ -190,7 +190,7 @@ export default function ProfileClient() {
             variant="outline"
             onClick={handleGlobalCancel}
             disabled={isSaving}
-            className="text-gray-700 border-gray-300 hover:bg-gray-50 dark:text-gray-200 dark:border-gray-600  "
+            className="text-foreground border-gray-300 bg-transparent hover:bg-primary/30 hover:text-foreground"
           >
             Cancel
           </Button>

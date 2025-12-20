@@ -127,8 +127,8 @@
 /* ===== Utilities Layer ===== */
 @layer utilities {
   .border-border {
-    border-color: #b8d9b5;
-    box-shadow: 0px 0px 20px 0px rgba(28, 150, 17, 0.1);
+    border-color: #E5E7EB;
+    box-shadow: 0px 0px 20px 0px #0000001A;
   }
 
   .bg-gradient-purple {

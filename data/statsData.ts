@@ -1,33 +1,69 @@
 // data/statsData.ts
-import { UserGroup03Icon, FileValidationIcon, ArtificialIntelligence02Icon, FileVerifiedIcon } from "@hugeicons/core-free-icons";
+import { 
+  Location01Icon, 
+  ChartLineData01Icon,
+  UniversityIcon,
+  Home02Icon,
+  Factory02Icon,
+  Plant03Icon,
+  City01Icon
+} from "@hugeicons/core-free-icons";
 
 export const statsData = [
   {
-    label: "Active Users",
-    value: "1,284",
-    trend: 8.5,
-    trendLabel: "from last month",
-    icon: UserGroup03Icon,
+    title: "Total Parcels",
+    value: "250",
+    icon: Location01Icon,
+    iconBgColor: "#3B82F6", // blue
   },
   {
-    label: "Total Claims",
-    value: "2,489",
-    trend: 8.5,
-    trendLabel: "from last month",
-    icon: FileValidationIcon,
+    title: "Total Area",
+    value: "772,870 m²",
+    icon: ChartLineData01Icon,
+    iconBgColor: "#10B981", // green
   },
   {
-    label: "Total AI Calls",
-    value: "1,367",
-    trend: -3.2,
-    trendLabel: "from last month",
-    icon: ArtificialIntelligence02Icon,
+    title: "Average Parcel Area",
+    value: "3,091 m²",
+    icon: Location01Icon,
+    iconBgColor: "#8B5CF6", // purple
   },
   {
-    label: "Documents Status",
-    value: "1,234",
-    trend: 5.7,
-    trendLabel: "from last month",
-    icon: FileVerifiedIcon,
+    title: "Leased Land",
+    value: "131",
+    subtitle: "(52.4%)",
+    icon: City01Icon,
+    iconBgColor: "#F97316", // orange
+  },
+  {
+    title: "Owned Land",
+    value: "119",
+    subtitle: "(47.6%)",
+    icon: Home02Icon,
+    iconBgColor: "#14B8A6", // teal
+  },
+  {
+    title: "Commercial Land",
+    value: "50",
+    icon: City01Icon,
+    iconBgColor: "#6366F1", // indigo
+  },
+  {
+    title: "Residential Land",
+    value: "69",
+    icon: UniversityIcon,
+    iconBgColor: "#10B981", // green
+  },
+  {
+    title: "Industrial Land",
+    value: "61",
+    icon: Factory02Icon,
+    iconBgColor: "#6B7280", // gray
+  },
+  {
+    title: "Agricultural Land",
+    value: "70",
+    icon: Plant03Icon,
+    iconBgColor: "#22C55E", // green
   },
 ];
