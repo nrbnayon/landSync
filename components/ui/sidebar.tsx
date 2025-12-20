@@ -103,7 +103,7 @@ export const DesktopSidebar = ({
   return (
     <motion.div
       className={cn(
-        "h-full px-4 py-4 hidden md:flex md:flex-col bg-background dark:bg-black shrink-0",
+        "h-full px-4 py-4 hidden md:flex md:flex-col bg-gray shrink-0",
         className
       )}
       animate={{
@@ -133,13 +133,13 @@ export const MobileSidebar = ({
     <>
       <div
         className={cn(
-          "h-10 px-4 py-4 flex flex-row md:hidden items-center justify-between bg-background dark:bg-primary-dark w-full"
+          "h-10 px-4 py-4 flex flex-row md:hidden items-center justify-between bg-gray w-full"
         )}
         {...props}
       >
-        <div className="flex justify-end z-80 w-full cursor-pointer">
+        <div className="flex justify-end z-80 w-full">
           <IconMenu2
-            className="text-white"
+            className="font-bold text-primary hover:scale-110 transition duration-150 cursor-pointer"
             onClick={() => setOpen(!open)}
           />
         </div>
@@ -154,15 +154,15 @@ export const MobileSidebar = ({
                 ease: "easeInOut",
               }}
               className={cn(
-                "fixed h-full w-[300px] inset-y-0 left-0 bg-white dark:bg-black p-10 z-100 flex flex-col justify-between shadow-xl",
+                "fixed h-full w-[300px] inset-y-0 left-0 bg-white p-10 z-100 flex flex-col justify-between shadow-xl",
                 className
               )}
             >
               <div
-                className="absolute right-10 top-10 z-50 text-white dark:text-neutral-200 cursor-pointer"
+                className="absolute right-10 top-10 z-50 rounded-full border border-destructive p-0.5 text-destructive scale-90 cursor-pointer hover:scale-110 transition duration-150"
                 onClick={() => setOpen(!open)}
               >
-                <IconX className="text-red" />
+                <IconX className="text-destructive" />
               </div>
               {children}
             </motion.div>
@@ -198,8 +198,8 @@ export const SidebarLink = ({
       className={cn(
         "flex items-center justify-start gap-2 group/sidebar px-2 pt-1 pb-0.5 rounded-md transition-colors",
         isActive
-          ? "bg-neutral-200 dark:bg-neutral-700 text-neutral-900 dark:text-neutral-100"
-          : "hover:bg-neutral-200 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-200",
+          ? "bg-neutral-200 text-foreground"
+          : "hover:bg-neutral-200 text-foreground",
         className
       )}
       onClick={handleClick}

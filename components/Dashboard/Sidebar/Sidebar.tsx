@@ -322,12 +322,12 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
     return (
       <HugeiconsIcon
         icon={icon}
-        strokeWidth={1.5}
+        strokeWidth={2}
         className={cn(
           "h-6 w-6 shrink-0 transition-colors duration-200",
           isActive
             ? "text-white font-bold"
-            : "text-[#0E2C48] group-hover:text-[#0E2C48]"
+            : "text-[#0E2C48] group-hover:text-[#0E2C48] font-bold"
         )}
       />
     );
@@ -337,11 +337,11 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
   const getRoleBadgeColor = (role: string) => {
     switch (role) {
       case "admin":
-        return "text-red-600";
+        return "text-primary";
       case "manager":
-        return "text-blue-600";
+        return "text-secondary";
       case "user":
-        return "text-green-600";
+        return "text-primary";
       default:
         return "text-secondary";
     }
@@ -599,7 +599,7 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
         <button
           onClick={handleToggleClick}
           className={cn(
-            "absolute hidden md:flex top-4 z-80 cursor-pointer p-2 rounded-full bg-gray border border-gray-300 shadow-lg hover:bg-gray-50 transition-all duration-200",
+            "absolute hidden md:flex top-4 z-80 cursor-pointer p-2 rounded-full bg-gray border border-gray-300 shadow-none hover:bg-gray-50 transition-all duration-200",
             open ? "-right-3" : "-right-3"
           )}
         >
@@ -630,7 +630,7 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
               onClick={handleCancelLogout}
               className="absolute top-4 right-4 p-1 rounded-full hover:bg-gray-100 transition-colors duration-200"
             >
-              <X className="h-5 w-5 text-secondary" />
+              <X className="h-5 w-5 text-destructive" />
             </button>
 
             <div className="text-center">

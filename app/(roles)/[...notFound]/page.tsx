@@ -110,9 +110,9 @@ export default function DashboardNotFound() {
           >
             <Link
               href="javascript:history.back()"
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 hover:text-foreground bg-gray hover:bg-gray-50 transition-all duration-300"
             >
-              <ArrowLeft className="w-4 h-4" />
+              <ArrowLeft className="w-4 h-4 hover:text-foreground" />
               Go Back
             </Link>
           </Button>
