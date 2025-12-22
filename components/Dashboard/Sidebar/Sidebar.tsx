@@ -361,7 +361,7 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
         >
           <SidebarBody
             className={cn(
-              "justify-between gap-10 border-0.5 border-r border-gray-200",
+              "justify-between gap-10 border-0.5",
               "bg-white text-[#0E2C48]"
             )}
           >
@@ -572,7 +572,7 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
 
         {/* Resizable Border */}
         <div
-          className="hidden md:block w-1 bg-transparent cursor-col-resize hover:bg-blue-500/20 transition-colors duration-200 relative group"
+          className="hidden md:block w-1 bg-white cursor-col-resize border-r border-gray-200 hover:bg-blue-500/20 transition-colors duration-200 relative group"
           onMouseDown={handleMouseDown}
         >
           <div className="absolute inset-0 w-2 -ml-0.5 bg-transparent" />
