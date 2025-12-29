@@ -1,6 +1,5 @@
 "use client";
 import { X } from "lucide-react";
-import { useEffect, useState } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Delete02Icon } from "@hugeicons/core-free-icons";
 interface DeleteConfirmationModalProps {
@@ -19,17 +18,7 @@ export function DeleteConfirmationModal({
   title = "Delete User",
   description = "Are you sure you want to delete this user? This action cannot be undone.",
 }: DeleteConfirmationModalProps & { isLoading?: boolean }) {
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    if (isOpen) {
-      setIsVisible(true);
-    } else {
-      setTimeout(() => setIsVisible(false), 300); // Wait for animation
-    }
-  }, [isOpen]);
-
-  if (!isVisible && !isOpen) return null;
+  if (!isOpen) return null;
 
   return (
     <div

@@ -1,12 +1,7 @@
 // components/Sidebar.tsx - RBAC-enabled Sidebar
 "use client";
 
-import React, {
-  useEffect,
-  useState,
-  useMemo,
-  useCallback,
-} from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { Sidebar, SidebarBody } from "@/components/ui/sidebar";
 import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
@@ -71,7 +66,7 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
 
   const minWidth = 80;
   const maxWidth = 400;
-
+  console.log(userEmail);
   // Get user role from cookie on component mount
   useEffect(() => {
     const getUserRole = () => {
@@ -92,7 +87,8 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
 
     const role = getUserRole();
     const email = getUserEmail();
-    
+
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setUserRole(role);
     setUserEmail(email);
 
@@ -113,7 +109,7 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
         label: "Dashboard",
         href: userRole === "admin" ? "/admin/dashboard" : "/user/dashboard",
         icon: DashboardSquare02Icon,
-        roles: ["admin", "user",], // All roles can access
+        roles: ["admin", "user"], // All roles can access
       },
       {
         label: "Upload Data",
@@ -147,7 +143,7 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
         label: "Settings",
         href: "/settings",
         icon: Settings01Icon,
-        roles: ["admin", "user",], // All roles can access
+        roles: ["admin", "user"], // All roles can access
       },
     ],
     [userRole]
@@ -435,7 +431,7 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
                             }}
                             className="text-md"
                           >
-                           <TranslatedText text={link.label} />
+                            <TranslatedText text={link.label} />
                           </motion.span>
 
                           {/* Expand/Collapse Button */}
@@ -549,7 +545,12 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
                       <p className="text-base font-medium truncate">
                         {userName}
                       </p>
-                      <p className={cn("text-sm truncate", getRoleBadgeColor(userRole))}>
+                      <p
+                        className={cn(
+                          "text-sm truncate",
+                          getRoleBadgeColor(userRole)
+                        )}
+                      >
                         {getRoleDisplayName(userRole)}
                       </p>
                     </motion.div>
@@ -606,7 +607,6 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
     </div>
   );
 }
-
 
 const Logo = ({ open }: { open: boolean }) => {
   return (

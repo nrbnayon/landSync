@@ -109,6 +109,7 @@ export default function PrivacyPolicyClient() {
       });
       setHasChanges(false);
     } catch (error) {
+      console.error(error)
       toast.error("Failed to save", {
         description: "Please try again.",
       });
@@ -181,7 +182,7 @@ export default function PrivacyPolicyClient() {
 
       {/* Policies List */}
       <div className="flex flex-col gap-8 flex-1">
-        {policies.map((policy, index) => (
+        {policies.map((policy) => (
           <div
             key={policy.id}
             className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 relative"
@@ -219,7 +220,7 @@ export default function PrivacyPolicyClient() {
                   onChange={(e) =>
                     handleDescriptionChange(policy.id, e.target.value)
                   }
-                  className="min-h-[140px] bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 resize-none focus:ring-2 focus:ring-primary/20"
+                  className="min-h-35 bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 resize-none focus:ring-2 focus:ring-primary/20"
                   placeholder="Enter policy description"
                 />
                 <div className="text-right text-xs text-gray-500   font-medium">

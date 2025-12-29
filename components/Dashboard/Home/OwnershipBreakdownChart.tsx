@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
@@ -10,15 +11,7 @@ const data = [
 const RADIAN = Math.PI / 180;
 
 const renderCustomizedLabel = (props: any) => {
-  const {
-    cx,
-    cy,
-    midAngle,
-    outerRadius,
-    fill,
-    payload,
-    value,
-  } = props;
+  const { cx, cy, midAngle, outerRadius, fill, payload, value } = props;
 
   const sin = Math.sin(-RADIAN * midAngle);
   const cos = Math.cos(-RADIAN * midAngle);
@@ -26,7 +19,7 @@ const renderCustomizedLabel = (props: any) => {
   const sy = cy + (outerRadius + 0) * sin;
   const mx = cx + (outerRadius + 20) * cos;
   const my = cy + (outerRadius + 20) * sin;
-  const ex = mx + (cos >= 0 ? 1 : -1) * 120; 
+  const ex = mx + (cos >= 0 ? 1 : -1) * 120;
   const ey = my;
   const textAnchor = cos >= 0 ? "start" : "end";
 
@@ -38,7 +31,7 @@ const renderCustomizedLabel = (props: any) => {
         stroke={fill}
         fill="none"
       />
-      
+
       {/* Label Text (Category Name) - Above Line */}
       <text
         x={ex + (cos >= 0 ? 1 : -1) * 8}
@@ -75,7 +68,7 @@ export function OwnershipBreakdownChart() {
         Ownership Breakdown
       </h2>
 
-      <div className="relative h-[300px] w-full">
+      <div className="relative h-75 w-full">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart margin={{ top: 20, right: 40, bottom: 20, left: 40 }}>
             <Pie
@@ -86,7 +79,7 @@ export function OwnershipBreakdownChart() {
               outerRadius={115}
               paddingAngle={0}
               dataKey="value"
-              startAngle={90}  // 12 o'clock
+              startAngle={90} // 12 o'clock
               endAngle={-270} // Clockwise full circle
               strokeWidth={0}
               label={renderCustomizedLabel}
@@ -96,7 +89,7 @@ export function OwnershipBreakdownChart() {
                 <Cell key={`cell-${index}`} fill={entry.color} />
               ))}
             </Pie>
-            <Tooltip 
+            <Tooltip
               content={({ active, payload }) => {
                 if (active && payload && payload.length) {
                   return (

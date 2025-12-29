@@ -32,7 +32,7 @@ export default function ProfileClient() {
   const [isEditingPassword, setIsEditingPassword] = useState(false);
   const [showEmail, setShowEmail] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  
+
   const [user, setUser] = useState<UserProfile>(MOCK_USER);
   const [editNameValue, setEditNameValue] = useState(user.fullName);
   const [passwordData, setPasswordData] = useState({
@@ -67,7 +67,11 @@ export default function ProfileClient() {
       return;
     }
 
-    setUser({ ...user, name: editNameValue.split(" ")[0] || editNameValue, fullName: editNameValue });
+    setUser({
+      ...user,
+      name: editNameValue.split(" ")[0] || editNameValue,
+      fullName: editNameValue,
+    });
     setIsEditingName(false);
     setHasChanges(true);
     toast.success("Name updated", {
@@ -120,12 +124,13 @@ export default function ProfileClient() {
     try {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1500));
-      
+
       toast.success("Profile saved", {
         description: "All changes have been saved successfully.",
       });
       setHasChanges(false);
     } catch (error) {
+      console.error(error);
       toast.error("Failed to save", {
         description: "Please try again.",
       });
@@ -141,14 +146,14 @@ export default function ProfileClient() {
       );
       if (!confirm) return;
     }
-    
+
     // Reset all editing states
     setIsEditingName(false);
     setIsEditingPassword(false);
     setEditNameValue(user.fullName);
     setPasswordData({ current: "", new: "", confirm: "" });
     setHasChanges(false);
-    
+
     toast.info("Changes discarded", {
       description: "All unsaved changes have been discarded.",
     });
@@ -178,13 +183,13 @@ export default function ProfileClient() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-50">
-           <TranslatedText text={user.role} />
+            <TranslatedText text={user.role} />
           </h1>
           <p className="text-sm text-gray-500   mt-1">
             <TranslatedText text="Track, manage and forecast your customers and Donations." />
           </p>
         </div>
-        
+
         <div className="flex items-center gap-3">
           <Button
             variant="outline"
@@ -208,8 +213,8 @@ export default function ProfileClient() {
       <div className="bg-white dark:bg-gray-800 rounded-xl p-8 border border-gray-200 dark:border-gray-700">
         {/* User Info Header */}
         <div className="flex items-center gap-5 mb-10">
-          <div className="relative w-[72px] h-[72px] rounded-full overflow-hidden shrink-0 bg-gray-200 dark:bg-gray-700">
-            <Image 
+          <div className="relative w-18 h-18 rounded-full overflow-hidden shrink-0 bg-gray-200 dark:bg-gray-700">
+            <Image
               src={user.avatar || "/images/avatar.png"}
               alt="Profile"
               width={72}
@@ -217,7 +222,9 @@ export default function ProfileClient() {
               className="object-cover"
               onError={(e) => {
                 const target = e.target as HTMLImageElement;
-                target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=random&size=72`;
+                target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                  user.name
+                )}&background=random&size=72`;
               }}
             />
           </div>
@@ -226,7 +233,7 @@ export default function ProfileClient() {
               {user.name}
             </h2>
             <p className="text-sm text-gray-500  ">
-             <TranslatedText text="Update your username and manage your account" />
+              <TranslatedText text="Update your username and manage your account" />
             </p>
           </div>
         </div>
@@ -248,13 +255,13 @@ export default function ProfileClient() {
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
                     <TranslatedText text="Your name" />
                   </label>
-                  
+
                   {isEditingName ? (
                     <div className="mt-3 max-w-lg bg-gray-50 dark:bg-gray-900 p-6 rounded-lg">
                       <p className="text-sm text-gray-500   mb-3">
                         Make sure this match the name on your any gov. ID.
                       </p>
-                      
+
                       <div className="space-y-2">
                         <label className="text-xs font-medium text-gray-600  ">
                           <TranslatedText text="Full name" />
@@ -267,7 +274,8 @@ export default function ProfileClient() {
                           maxLength={32}
                         />
                         <div className="text-right text-xs text-gray-400">
-                          <TranslatedText text="text limit" /> {editNameValue.length}/32  
+                          <TranslatedText text="text limit" />{" "}
+                          {editNameValue.length}/32
                         </div>
                       </div>
 
@@ -315,14 +323,20 @@ export default function ProfileClient() {
                     Email
                   </label>
                   <div className="text-gray-700 dark:text-gray-300">
-                    {showEmail ? user.email : user.email.replace(/(.{3})(.*)(@.*)/, "$1***$3")}
+                    {showEmail
+                      ? user.email
+                      : user.email.replace(/(.{3})(.*)(@.*)/, "$1***$3")}
                   </div>
                 </div>
-                <button 
+                <button
                   onClick={() => setShowEmail(!showEmail)}
                   className="flex items-center gap-2 text-gray-500 hover:text-gray-900   dark:hover:text-gray-100 font-semibold text-sm transition-colors"
                 >
-                  {showEmail ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  {showEmail ? (
+                    <EyeOff className="w-4 h-4" />
+                  ) : (
+                    <Eye className="w-4 h-4" />
+                  )}
                   {showEmail ? "Hide" : "View"}
                 </button>
               </div>
@@ -335,7 +349,7 @@ export default function ProfileClient() {
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
                     Password
                   </label>
-                  
+
                   {isEditingPassword ? (
                     <div className="mt-3 max-w-lg bg-gray-50 dark:bg-gray-900 p-6 rounded-lg space-y-4">
                       <div className="space-y-2">
@@ -345,7 +359,12 @@ export default function ProfileClient() {
                         <Input
                           type={showPassword ? "text" : "password"}
                           value={passwordData.current}
-                          onChange={(e) => setPasswordData({ ...passwordData, current: e.target.value })}
+                          onChange={(e) =>
+                            setPasswordData({
+                              ...passwordData,
+                              current: e.target.value,
+                            })
+                          }
                           className="w-full bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600"
                           placeholder="Enter current password"
                         />
@@ -358,7 +377,12 @@ export default function ProfileClient() {
                         <Input
                           type={showPassword ? "text" : "password"}
                           value={passwordData.new}
-                          onChange={(e) => setPasswordData({ ...passwordData, new: e.target.value })}
+                          onChange={(e) =>
+                            setPasswordData({
+                              ...passwordData,
+                              new: e.target.value,
+                            })
+                          }
                           className="w-full bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600"
                           placeholder="Enter new password"
                         />
@@ -371,7 +395,12 @@ export default function ProfileClient() {
                         <Input
                           type={showPassword ? "text" : "password"}
                           value={passwordData.confirm}
-                          onChange={(e) => setPasswordData({ ...passwordData, confirm: e.target.value })}
+                          onChange={(e) =>
+                            setPasswordData({
+                              ...passwordData,
+                              confirm: e.target.value,
+                            })
+                          }
                           className="w-full bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600"
                           placeholder="Confirm new password"
                         />
@@ -385,7 +414,10 @@ export default function ProfileClient() {
                           onChange={(e) => setShowPassword(e.target.checked)}
                           className="rounded"
                         />
-                        <label htmlFor="showPassword" className="text-xs text-gray-600  ">
+                        <label
+                          htmlFor="showPassword"
+                          className="text-xs text-gray-600  "
+                        >
                           Show passwords
                         </label>
                       </div>

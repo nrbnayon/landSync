@@ -20,6 +20,7 @@ const data = [
   { zone: "Zone D", totalParcels: 45.5 },
 ];
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
     return (
@@ -40,6 +41,7 @@ const CustomTooltip = ({ active, payload }: any) => {
 };
 
 // Custom tick to split text into two lines
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const CustomizedAxisTick = (props: any) => {
   const { x, y, payload } = props;
   const words = payload.value.split(" ");

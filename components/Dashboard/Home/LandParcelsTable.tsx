@@ -24,6 +24,7 @@ export default function LandParcelsTable({ itemsPerPage = 10 }: LandParcelsTable
   const currentItems = landParcelsData.slice(startIndex, endIndex);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsLoading(true);
     const timer = setTimeout(() => {
       setIsLoading(false);

@@ -17,7 +17,7 @@ function LanguageSwitcher() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <div className="hidden md:flex items-center justify-between px-3 py-2 border rounded-md min-w-[120px] cursor-pointer hover:bg-gray-50 bg-white transition-colors">
+        <div className="hidden md:flex items-center justify-between px-3 py-2 border rounded-md min-w-30 cursor-pointer hover:bg-gray-50 bg-white transition-colors">
           <div className="flex items-center gap-2">
             <span className="text-sm">
               {language === "en" ? "English" : "Afan Oromo"}

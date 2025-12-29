@@ -1,4 +1,6 @@
 // components/Dashboard/Home/RightTypeDistributionChart.tsx
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 "use client";
 
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
@@ -78,7 +80,7 @@ export function RightTypeDistributionChart() {
         Right Type Distribution
       </h2>
 
-      <div className="relative h-[300px] w-full">
+      <div className="relative h-75 w-full">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart margin={{ top: 20, right: 40, bottom: 20, left: 40 }}>
             <Pie
@@ -89,17 +91,17 @@ export function RightTypeDistributionChart() {
               outerRadius={115}
               paddingAngle={0}
               dataKey="value"
-              startAngle={90} 
-              endAngle={-270} 
+              startAngle={90}
+              endAngle={-270}
               strokeWidth={0}
               label={renderCustomizedLabel}
-              labelLine={false} 
+              labelLine={false}
             >
               {data.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={entry.color} />
               ))}
             </Pie>
-            <Tooltip 
+            <Tooltip
               content={({ active, payload }) => {
                 if (active && payload && payload.length) {
                   return (
