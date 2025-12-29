@@ -1,7 +1,5 @@
 // components/Dashboard/Shared/LandParcelsTable.tsx
 "use client";
-
-import { useState, useEffect } from "react";
 import { Pagination } from "@/components/Shared/Pagination";
 import TranslatedText from "@/components/Shared/TranslatedText";
 import { Skeleton } from "@/components/ui/skeleton";
