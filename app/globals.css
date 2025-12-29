@@ -15,6 +15,7 @@
   --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
   --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-primary-green: var(--primary-green);
   --color-sidebar: var(--sidebar);
   --color-chart-5: var(--chart-5);
   --color-chart-4: var(--chart-4);
@@ -48,33 +49,34 @@
 
 :root {
   --radius: 0.625rem;
-  --background: #E8F5E7;
+  --background: #e8f5e7;
   --foreground: #171135;
-  --primary: #1c9611;
+  --primary: #67b960;
   --primary-foreground: #ffffff;
   --secondary: #747086;
   --secondary-foreground: #ffffff;
   --muted: #d4ead2;
+  --primary-green: #49ab41;
   --muted-foreground: #5a6e57;
   --accent: #28a745;
   --accent-foreground: #ffffff;
   --destructive: #dc3545;
-  --border: #E5E7EB;
-  --input: #E8E8EB;
+  --border: #e5e7eb;
+  --input: #e8e8eb;
   --ring: #1fd30eff;
-  --chart-1: #1c9611;
+  --chart-1: #67b960;
   --chart-2: #28a745;
   --chart-3: #52c362;
   --chart-4: #7ed38b;
   --chart-5: #a8e3b4;
   --sidebar: #f5faf4;
   --sidebar-foreground: #171135;
-  --sidebar-primary: #1c9611;
+  --sidebar-primary: #67b960;
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #d4ead2;
   --sidebar-accent-foreground: #171135;
-  --sidebar-border: #E5E7EB;
-  --sidebar-ring: #1c9611;
+  --sidebar-border: #e5e7eb;
+  --sidebar-ring: #67b960;
   --card: #ffffff;
   --card-foreground: #171135;
   --popover: #ffffff;
@@ -94,7 +96,7 @@
   --secondary-foreground: #ffffff;
   --muted: #1a2128;
   --muted-foreground: #a8b5a3;
-  --accent: #1c9611;
+  --accent: #67b960;
   --accent-foreground: #ffffff;
   --destructive: #e74c3c;
   --border: #2a3440;
@@ -127,8 +129,8 @@
 /* ===== Utilities Layer ===== */
 @layer utilities {
   .border-border {
-    border-color: #E5E7EB;
-    box-shadow: 0px 0px 20px 0px #0000001A;
+    border-color: #e5e7eb;
+    box-shadow: 0px 0px 20px 0px #0000001a;
   }
 
   .bg-gradient-purple {
@@ -136,7 +138,7 @@
   }
 
   .bg-gradient-green {
-    background: linear-gradient(180deg, #1C9611 0%, #1C9611 98.96%);
+    background: linear-gradient(180deg, #1c9611 0%, #1c9611 98.96%);
   }
 
   .hover\:bg-gradient-green-hover:hover {

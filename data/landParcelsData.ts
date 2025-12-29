@@ -1,3 +1,4 @@
+// data\landParcelsData.ts
 import { LandParcel } from "@/types/land-parcel";
 
 export const landParcelsData: LandParcel[] = [
