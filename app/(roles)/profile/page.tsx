@@ -3,12 +3,14 @@ import DashboardHeader from "@/components/Dashboard/Shared/DashboardHeader";
 
 export default function ProfilePage() {
     return (
-        <div className="p-4 md:p-8">
-            <DashboardHeader
-                title="Profile"
-                description="View and manage your profile information"
-            />
-            <ProfileClient />
+      <div>
+        <DashboardHeader
+          title="Profile"
+          description="View and manage your profile information"
+        />
+        <div className="p-4 md:px-8 md:py-6">
+          <ProfileClient />
         </div>
+      </div>
     );
 }
