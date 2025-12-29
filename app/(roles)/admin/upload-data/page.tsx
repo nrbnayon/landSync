@@ -7,9 +7,12 @@ import DataManagementClient from "@/components/Dashboard/DataManagement/DataMana
 import DataUploadClient from "@/components/Dashboard/DataManagement/DataUploadClient";
 import ExportDropdown from "@/components/Dashboard/DataManagement/ExportDropdown";
 import { landParcelsData } from "@/data/landParcelsData";
+import TranslatedText from "@/components/Shared/TranslatedText";
 
 export default function UploadDataPage() {
-  const [activeTab, setActiveTab] = useState<"management" | "upload">("management");
+  const [activeTab, setActiveTab] = useState<"management" | "upload">(
+    "management"
+  );
 
   return (
     <div className="h-screen">
@@ -17,7 +20,7 @@ export default function UploadDataPage() {
         title="Data Management"
         description="Add, edit, and manage property records"
       />
-      
+
       <div className="p-4 md:px-8 md:py-6">
         {/* Tabs and Export Button */}
         <div className="flex justify-between items-center mb-6">
@@ -30,7 +33,7 @@ export default function UploadDataPage() {
                   : "text-gray-600 hover:text-gray-900"
               }`}
             >
-              Data Management
+              <TranslatedText text="Data Management" />
             </button>
             <button
               onClick={() => setActiveTab("upload")}
@@ -40,7 +43,7 @@ export default function UploadDataPage() {
                   : "text-gray-600 hover:text-gray-900"
               }`}
             >
-              Data Upload
+              <TranslatedText text="Data Upload" />
             </button>
           </div>
 
