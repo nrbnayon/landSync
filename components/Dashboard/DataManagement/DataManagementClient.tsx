@@ -26,7 +26,8 @@ export default function DataManagementClient({
 }: DataManagementClientProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
-  const [filteredData, setFilteredData] = useState<LandParcel[]>(landParcelsData);
+  const [filteredData, setFilteredData] =
+    useState<LandParcel[]>(landParcelsData);
   const [searchParcelId, setSearchParcelId] = useState("");
   const [filterZone, setFilterZone] = useState("");
   const [filterType, setFilterType] = useState("");
@@ -35,7 +36,9 @@ export default function DataManagementClient({
   const [toDate, setToDate] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<"create" | "edit">("create");
-  const [selectedProperty, setSelectedProperty] = useState<LandParcel | null>(null);
+  const [selectedProperty, setSelectedProperty] = useState<LandParcel | null>(
+    null
+  );
 
   const uniqueZones = Array.from(
     new Set(landParcelsData.map((p) => p.zone))
@@ -82,6 +85,7 @@ export default function DataManagementClient({
       });
     }
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setFilteredData(filtered);
     setCurrentPage(1);
   }, [
@@ -94,6 +98,7 @@ export default function DataManagementClient({
   ]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsLoading(true);
     const timer = setTimeout(() => {
       setIsLoading(false);
@@ -118,6 +123,12 @@ export default function DataManagementClient({
   const handleAddProperty = () => {
     setModalMode("create");
     setSelectedProperty(null);
+    setIsModalOpen(true);
+  };
+
+  const handleEditProperty = (property: LandParcel) => {
+    setModalMode("edit");
+    setSelectedProperty(property);
     setIsModalOpen(true);
   };
 
@@ -276,7 +287,7 @@ export default function DataManagementClient({
             className="pl-10 w-full md:w-60"
           />
         </div>
-        <Button 
+        <Button
           className="bg-primary-green text-white hover:bg-green-600"
           onClick={handleAddProperty}
         >
@@ -292,6 +303,7 @@ export default function DataManagementClient({
         isLoading={isLoading}
         currentPage={currentPage}
         onPageChange={handlePageChange}
+        onEdit={handleEditProperty}
       />
 
       {/* Property Modal */}

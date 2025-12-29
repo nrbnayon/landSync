@@ -33,10 +33,13 @@ export default function PropertyModal({
     registrationDate: "",
   });
 
-  const [errors, setErrors] = useState<Partial<Record<keyof LandParcelFormData, string>>>({});
+  const [errors, setErrors] = useState<
+    Partial<Record<keyof LandParcelFormData, string>>
+  >({});
 
   useEffect(() => {
     if (property && mode === "edit") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData({
         parcelId: property.parcelId,
         ownerName: property.ownerName,
@@ -60,13 +63,15 @@ export default function PropertyModal({
     setErrors({});
   }, [property, mode, isOpen]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: name === "area" ? parseFloat(value) || 0 : value,
     }));
-    
+
     if (errors[name as keyof LandParcelFormData]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
@@ -76,12 +81,15 @@ export default function PropertyModal({
     const newErrors: Partial<Record<keyof LandParcelFormData, string>> = {};
 
     if (!formData.parcelId.trim()) newErrors.parcelId = "Parcel ID is required";
-    if (!formData.ownerName.trim()) newErrors.ownerName = "Owner Name is required";
-    if (!formData.area || formData.area <= 0) newErrors.area = "Area must be greater than 0";
+    if (!formData.ownerName.trim())
+      newErrors.ownerName = "Owner Name is required";
+    if (!formData.area || formData.area <= 0)
+      newErrors.area = "Area must be greater than 0";
     if (!formData.zone.trim()) newErrors.zone = "Zone is required";
     if (!formData.type) newErrors.type = "Type is required";
     if (!formData.ownership) newErrors.ownership = "Ownership is required";
-    if (!formData.registrationDate) newErrors.registrationDate = "Registration Date is required";
+    if (!formData.registrationDate)
+      newErrors.registrationDate = "Registration Date is required";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -102,7 +110,9 @@ export default function PropertyModal({
       <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
         <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center">
           <h2 className="text-xl font-semibold text-foreground">
-            <TranslatedText text={mode === "create" ? "Add New Property" : "Edit Property"} />
+            <TranslatedText
+              text={mode === "create" ? "Add New Property" : "Edit Property"}
+            />
           </h2>
           <button
             onClick={onClose}
@@ -250,7 +260,9 @@ export default function PropertyModal({
                 className={errors.registrationDate ? "border-red-500" : ""}
               />
               {errors.registrationDate && (
-                <p className="text-red-500 text-xs mt-1">{errors.registrationDate}</p>
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.registrationDate}
+                </p>
               )}
             </div>
           </div>
@@ -268,7 +280,9 @@ export default function PropertyModal({
               type="submit"
               className="bg-primary-green text-white px-6 hover:bg-green-600"
             >
-              <TranslatedText text={mode === "create" ? "Create Property" : "Update Property"} />
+              <TranslatedText
+                text={mode === "create" ? "Create Property" : "Update Property"}
+              />
             </Button>
           </div>
         </form>

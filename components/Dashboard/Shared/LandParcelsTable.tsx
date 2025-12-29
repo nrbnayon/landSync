@@ -13,6 +13,7 @@ interface LandParcelsTableProps {
   isLoading?: boolean;
   currentPage: number;
   onPageChange: (page: number) => void;
+  onEdit?: (property: LandParcel) => void;
 }
 
 export default function LandParcelsTable({
@@ -21,10 +22,11 @@ export default function LandParcelsTable({
   isLoading = false,
   currentPage,
   onPageChange,
+  onEdit,
 }: LandParcelsTableProps) {
   const totalItems = data.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
-  
+
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentItems = data.slice(startIndex, endIndex);
@@ -82,6 +84,11 @@ export default function LandParcelsTable({
               <th className="px-6 py-4 text-left text-sm font-semibold">
                 <TranslatedText text="Registration Date" />
               </th>
+              {onEdit && (
+                <th className="px-6 py-4 text-left text-sm font-semibold">
+                  <TranslatedText text="Action" />
+                </th>
+              )}
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
@@ -101,7 +108,7 @@ export default function LandParcelsTable({
                     <Skeleton className="h-4 w-16" />
                   </td>
                   <td className="px-6 py-4">
-                    <Skeleton className="h-6 w-24 rounded-full" />
+                    <Skeleton className="h-6 w-16 rounded" />
                   </td>
                   <td className="px-6 py-4">
                     <Skeleton className="h-6 w-20 rounded-full" />
@@ -109,6 +116,11 @@ export default function LandParcelsTable({
                   <td className="px-6 py-4">
                     <Skeleton className="h-4 w-24" />
                   </td>
+                  {onEdit && (
+                    <td className="px-6 py-4">
+                      <Skeleton className="h-6 w-16 rounded" />
+                    </td>
+                  )}
                 </tr>
               ))
             ) : currentItems.length > 0 ? (
@@ -150,12 +162,22 @@ export default function LandParcelsTable({
                   <td className="px-6 py-4 text-sm text-secondary">
                     {parcel.registrationDate}
                   </td>
+                  {onEdit && (
+                    <td className="px-6 py-4">
+                      <button
+                        onClick={() => onEdit(parcel)}
+                        className="px-3 py-1 text-xs font-medium rounded-md bg-primary-green text-white hover:bg-green-600 transition-colors"
+                      >
+                        <TranslatedText text="Edit" />
+                      </button>
+                    </td>
+                  )}
                 </tr>
               ))
             ) : (
               <tr>
                 <td
-                  colSpan={7}
+                  colSpan={onEdit ? 8 : 7}
                   className="px-6 py-8 text-center text-secondary"
                 >
                   <TranslatedText text="No records found" />
