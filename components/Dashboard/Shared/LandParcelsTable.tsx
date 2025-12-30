@@ -4,6 +4,7 @@ import { Pagination } from "@/components/Shared/Pagination";
 import TranslatedText from "@/components/Shared/TranslatedText";
 import { Skeleton } from "@/components/ui/skeleton";
 import { LandParcel } from "@/types/land-parcel";
+import { useUser } from "@/hooks/useUser";
 
 interface LandParcelsTableProps {
   data: LandParcel[];
@@ -24,6 +25,7 @@ export default function LandParcelsTable({
 }: LandParcelsTableProps) {
   const totalItems = data.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const { hasRole } = useUser();
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -82,7 +84,7 @@ export default function LandParcelsTable({
               <th className="px-6 py-4 text-left text-sm font-semibold">
                 <TranslatedText text="Registration Date" />
               </th>
-              {onEdit && (
+              {onEdit && hasRole("admin") && (
                 <th className="px-6 py-4 text-left text-sm font-semibold">
                   <TranslatedText text="Action" />
                 </th>
@@ -114,7 +116,7 @@ export default function LandParcelsTable({
                   <td className="px-6 py-4">
                     <Skeleton className="h-4 w-24" />
                   </td>
-                  {onEdit && (
+                  {onEdit && hasRole("admin") && (
                     <td className="px-6 py-4">
                       <Skeleton className="h-6 w-16 rounded" />
                     </td>
@@ -160,7 +162,7 @@ export default function LandParcelsTable({
                   <td className="px-6 py-4 text-sm text-secondary">
                     {parcel.registrationDate}
                   </td>
-                  {onEdit && (
+                  {onEdit && hasRole("admin") && (
                     <td className="px-6 py-4">
                       <button
                         onClick={() => onEdit(parcel)}
@@ -175,7 +177,7 @@ export default function LandParcelsTable({
             ) : (
               <tr>
                 <td
-                  colSpan={onEdit ? 8 : 7}
+                  colSpan={onEdit && hasRole("admin") ? 8 : 7}
                   className="px-6 py-8 text-center text-secondary"
                 >
                   <TranslatedText text="No records found" />
