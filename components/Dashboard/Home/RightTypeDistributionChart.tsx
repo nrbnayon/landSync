@@ -4,6 +4,7 @@
 "use client";
 
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
+import { useState, useEffect } from "react";
 
 const data = [
   { name: "Commercial", value: 20, color: "#799EFF" },   // Blue - Top Right
@@ -74,52 +75,62 @@ const renderCustomizedLabel = (props: any) => {
 };
 
 export function RightTypeDistributionChart() {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   return (
     <div className="bg-white p-6 rounded-2xl border border-border">
       <h2 className="text-xl font-semibold text-foreground mb-6">
         Right Type Distribution
       </h2>
 
-      <div className="relative h-75 w-full">
-        <ResponsiveContainer width="100%" height="100%">
-          <PieChart margin={{ top: 20, right: 40, bottom: 20, left: 40 }}>
-            <Pie
-              data={data}
-              cx="50%"
-              cy="50%"
-              innerRadius={85}
-              outerRadius={115}
-              paddingAngle={0}
-              dataKey="value"
-              startAngle={90}
-              endAngle={-270}
-              strokeWidth={0}
-              label={renderCustomizedLabel}
-              labelLine={false}
-            >
-              {data.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.color} />
-              ))}
-            </Pie>
-            <Tooltip
-              content={({ active, payload }) => {
-                if (active && payload && payload.length) {
-                  return (
-                    <div className="bg-white px-3 py-2 rounded-lg shadow-lg border border-gray-100">
-                      <p className="text-sm font-semibold text-foreground">
-                        {payload[0].name}
-                      </p>
-                      <p className="text-sm text-secondary">
-                        {payload[0].value}%
-                      </p>
-                    </div>
-                  );
-                }
-                return null;
-              }}
-            />
-          </PieChart>
-        </ResponsiveContainer>
+      <div className="relative h-[300px] w-full min-w-0">
+        {isMounted ? (
+            <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+            <PieChart margin={{ top: 20, right: 40, bottom: 20, left: 40 }}>
+                <Pie
+                data={data}
+                cx="50%"
+                cy="50%"
+                innerRadius={85}
+                outerRadius={115}
+                paddingAngle={0}
+                dataKey="value"
+                startAngle={90}
+                endAngle={-270}
+                strokeWidth={0}
+                label={renderCustomizedLabel}
+                labelLine={false}
+                >
+                {data.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                ))}
+                </Pie>
+                <Tooltip
+                content={({ active, payload }) => {
+                    if (active && payload && payload.length) {
+                    return (
+                        <div className="bg-white px-3 py-2 rounded-lg shadow-lg border border-gray-100">
+                        <p className="text-sm font-semibold text-foreground">
+                            {payload[0].name}
+                        </p>
+                        <p className="text-sm text-secondary">
+                            {payload[0].value}%
+                        </p>
+                        </div>
+                    );
+                    }
+                    return null;
+                }}
+                />
+            </PieChart>
+            </ResponsiveContainer>
+        ) : (
+             <div className="h-full w-full bg-gray-50 rounded-lg animate-pulse" />
+        )}
 
         {/* Center Text */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">

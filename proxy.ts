@@ -179,19 +179,20 @@ export async function proxy(request: NextRequest) {
 
   if (accessToken) {
     // Development mode: Accept dummy credentials
-    if (isDevelopment && accessToken === "dev-admin-token") {
+    // Check for dummy credentials (allow in all environments for demo/design phase)
+    if (accessToken === "dev-admin-token") {
       user = { email: "admin@gmail.com", role: "admin" };
       isAuthenticated = true;
       if (!userRole) {
         userRole = "admin";
       }
-    } else if (isDevelopment && accessToken === "dev-user-token") {
+    } else if (accessToken === "dev-user-token") {
       user = { email: "user@gmail.com", role: "user" };
       isAuthenticated = true;
       if (!userRole) {
         userRole = "user";
       }
-    } else if (isDevelopment && accessToken === "dev-manager-token") {
+    } else if (accessToken === "dev-manager-token") {
       user = { email: "manager@gmail.com", role: "manager" };
       isAuthenticated = true;
       if (!userRole) {

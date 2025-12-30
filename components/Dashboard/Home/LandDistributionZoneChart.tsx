@@ -11,6 +11,7 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
+import { useState, useEffect } from "react";
 
 const data = [
   { zone: "Zone E", totalParcels: 55.0 },
@@ -59,59 +60,71 @@ const CustomizedAxisTick = (props: any) => {
 };
 
 export function LandDistributionZoneChart() {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   return (
     <div className="bg-white p-6 rounded-2xl border border-border">
       <h2 className="text-lg font-semibold text-foreground mb-6">
         Land Distribution by Zone
       </h2>
 
-      <ResponsiveContainer width="100%" height={300}>
-        <BarChart
-          data={data}
-          margin={{ top: 10, right: 30, left: 0, bottom: 20 }}
-        >
-          <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" vertical={false} />
-          <XAxis
-            dataKey="zone"
-            axisLine={true}
-            tickLine={false}
-            tick={<CustomizedAxisTick />}
-            interval={0}
-            stroke="#E5E7EB"
-          />
-          <YAxis
-            axisLine={false}
-            tickLine={false}
-            tick={{ fill: "#6B7280", fontSize: 12 }}
-            domain={[0, 60]}
-            ticks={[0, 15, 30, 45, 60]}
-            tickFormatter={(value) => {
-              if (value === 60) return "60";
-              if (value === 45) return "45";
-              if (value === 30) return "30";
-              if (value === 15) return "15";
-              return value.toString();
-            }}
-          />
-          <Tooltip content={<CustomTooltip />} />
-          <Legend
-            verticalAlign="bottom"
-            height={36}
-            iconType="square"
-            wrapperStyle={{ paddingTop: "10px" }}
-            formatter={(value) => (
-              <span className="text-sm text-secondary ml-1">{value}</span>
-            )}
-          />
-          <Bar
-            dataKey="totalParcels"
-            fill="#3B82F6"
-            // radius={[0, 0, 0, 0]} // Square corners based on image
-            barSize={60}
-            name="Total Parcels"
-          />
-        </BarChart>
-      </ResponsiveContainer>
+      <div className="h-[300px] w-full min-w-0">
+        {isMounted ? (
+          <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+            <BarChart
+              data={data}
+              margin={{ top: 10, right: 30, left: 0, bottom: 20 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" vertical={false} />
+              <XAxis
+                dataKey="zone"
+                axisLine={true}
+                tickLine={false}
+                tick={<CustomizedAxisTick />}
+                interval={0}
+                stroke="#E5E7EB"
+              />
+              <YAxis
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: "#6B7280", fontSize: 12 }}
+                domain={[0, 60]}
+                ticks={[0, 15, 30, 45, 60]}
+                tickFormatter={(value) => {
+                  if (value === 60) return "60";
+                  if (value === 45) return "45";
+                  if (value === 30) return "30";
+                  if (value === 15) return "15";
+                  return value.toString();
+                }}
+              />
+              <Tooltip content={<CustomTooltip />} />
+              <Legend
+                verticalAlign="bottom"
+                height={36}
+                iconType="square"
+                wrapperStyle={{ paddingTop: "10px" }}
+                formatter={(value) => (
+                  <span className="text-sm text-secondary ml-1">{value}</span>
+                )}
+              />
+              <Bar
+                dataKey="totalParcels"
+                fill="#3B82F6"
+                // radius={[0, 0, 0, 0]} // Square corners based on image
+                barSize={60}
+                name="Total Parcels"
+              />
+            </BarChart>
+          </ResponsiveContainer>
+        ) : (
+          <div className="h-full w-full bg-gray-50 rounded-lg animate-pulse" />
+        )}
+      </div>
     </div>
   );
 }
