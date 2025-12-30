@@ -9,6 +9,7 @@ import { Eye, EyeOff, Pencil } from "lucide-react";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
 import TranslatedText from "@/components/Shared/TranslatedText";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface UserProfile {
   name: string;
@@ -28,6 +29,7 @@ const MOCK_USER: UserProfile = {
 export default function ProfileClient() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const { language, setLanguage } = useLanguage();
   const [activeSection, setActiveSection] = useState<
     "account" | "notifications" | "language"
   >("account");
@@ -47,7 +49,14 @@ export default function ProfileClient() {
   const [popUpNotification, setPopUpNotification] = useState(true);
   const [chatNotification, setChatNotification] = useState(true);
   const [newUpdateNotification, setNewUpdateNotification] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState("English");
+  const [selectedLanguage, setSelectedLanguage] = useState(language === "om" ? "Oromo" : "English");
+
+  // Sync with global language if it changes externally and we don't have local changes
+  useEffect(() => {
+    if (!hasChanges) {
+      setSelectedLanguage(language === "om" ? "Oromo" : "English");
+    }
+  }, [language, hasChanges]);
 
   useEffect(() => {
     // Simulate loading user data
@@ -132,6 +141,13 @@ export default function ProfileClient() {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
+      // Update global language
+      if (selectedLanguage === "English") {
+        setLanguage("en");
+      } else if (selectedLanguage === "Oromo") {
+        setLanguage("om");
+      }
+
       toast.success("Profile saved", {
         description: "All changes have been saved successfully.",
       });
@@ -162,7 +178,7 @@ export default function ProfileClient() {
     setPopUpNotification(true);
     setChatNotification(true);
     setNewUpdateNotification(false);
-    setSelectedLanguage("English");
+    setSelectedLanguage(language === "om" ? "Oromo" : "English");
     setHasChanges(false);
 
     toast.info("Changes discarded", {
@@ -197,7 +213,7 @@ export default function ProfileClient() {
             <TranslatedText text={user.role} />
           </h1>
           <p className="text-sm text-gray-500 mt-1">
-            <TranslatedText text="Track, manage and forecast your customers and Donations." />
+            <TranslatedText text="Track, manage and forecast your lands." />
           </p>
         </div>
 

@@ -157,8 +157,8 @@ export default function PrivacyPolicyClient() {
           <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-50">
             Privacy and policy
           </h1>
-          <p className="text-sm text-gray-500   mt-1">
-            Track, manage and forecast your customers and Donations.
+          <p className="text-sm text-gray-500 mt-1">
+            Track, manage and forecast your privacy policies.
           </p>
         </div>
         <div className="flex items-center gap-3">
