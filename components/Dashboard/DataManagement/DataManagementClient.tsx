@@ -16,6 +16,7 @@ import {
 import LandParcelsTable from "@/components/Dashboard/Shared/LandParcelsTable";
 import PropertyModal from "./PropertyModal";
 import ExportDropdown from "./ExportDropdown";
+import { useUser } from "@/hooks/useUser";
 
 interface DataManagementClientProps {
   itemsPerPage?: number;
@@ -24,6 +25,7 @@ interface DataManagementClientProps {
 export default function DataManagementClient({
   itemsPerPage = 10,
 }: DataManagementClientProps) {
+  const { hasRole } = useUser();
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [filteredData, setFilteredData] =
@@ -276,25 +278,27 @@ export default function DataManagementClient({
       </div>
 
       {/* Search and Add Section */}
-      <div className="flex justify-between items-center gap-4 p-5 bg-white rounded-lg border border-border">
-        <div className="relative w-full md:w-auto">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-secondary" />
-          <Input
-            type="text"
-            placeholder="Search"
-            value={searchParcelId}
-            onChange={(e) => setSearchParcelId(e.target.value)}
-            className="pl-10 w-full md:w-60"
-          />
+      {hasRole("admin") && (
+        <div className="flex justify-between items-center gap-4 p-5 bg-white rounded-lg border border-border">
+          <div className="relative w-full md:w-auto">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-secondary" />
+            <Input
+              type="text"
+              placeholder="Search"
+              value={searchParcelId}
+              onChange={(e) => setSearchParcelId(e.target.value)}
+              className="pl-10 w-full md:w-60"
+            />
+          </div>
+          <Button
+            className="bg-primary-green text-white hover:bg-green-600"
+            onClick={handleAddProperty}
+          >
+            <HugeiconsIcon icon={AddSquareIcon} />
+            <TranslatedText text="Add Property" />
+          </Button>
         </div>
-        <Button
-          className="bg-primary-green text-white hover:bg-green-600"
-          onClick={handleAddProperty}
-        >
-          <HugeiconsIcon icon={AddSquareIcon} />
-          <TranslatedText text="Add Property" />
-        </Button>
-      </div>
+      )}
 
       {/* Data Table */}
       <LandParcelsTable
