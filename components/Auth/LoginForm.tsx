@@ -45,7 +45,6 @@ export default function LoginForm() {
       // Development dummy credentials check with role assignment
       const isDummyLogin =
         (data.email === "admin@gmail.com" && data.password === "admin") ||
-        (data.email === "manager@gmail.com" && data.password === "manager") ||
         (data.email === "user@gmail.com" && data.password === "user");
 
       if (isDummyLogin) {
@@ -58,8 +57,6 @@ export default function LoginForm() {
         let userRole = "user";
         if (data.email === "admin@gmail.com") {
           userRole = "admin";
-        } else if (data.email === "manager@gmail.com") {
-          userRole = "manager";
         } else if (data.email === "user@gmail.com") {
           userRole = "user";
         }
@@ -79,8 +76,6 @@ export default function LoginForm() {
         setTimeout(() => {
           if (userRole === "admin") {
             router.push("/admin/dashboard");
-          } else if (userRole === "manager") {
-            router.push("/manager/dashboard");
           } else {
             router.push("/user/dashboard");
           }

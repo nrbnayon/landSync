@@ -13,7 +13,9 @@ const PUBLIC_ROUTES = [
   "/register",
   "/forgot-password",
   "/reset-password",
-  "/verify-email",
+  "/reset-success",
+  "/verify-otp",
+  "/success",
   "/terms",
   "/privacy-policy",
 ];
@@ -25,14 +27,6 @@ const COMMON_PROTECTED_ROUTES = ["/dashboard", "/profile", "/settings"];
 const ROLE_ROUTES = {
   admin: ["/admin", "/admin/dashboard","/admin/upload-data", "/admin/users", "/admin/history"],
   user: ["/user/dashboard", "/user/data"],
-  // manager: [
-  //   "/manager/dashboard",
-  //   "/manager/team",
-  //   "/manager/reports",
-  //   "/documents", // Manager can access documents
-  //   "/reports", // Manager can access reports
-  //   "/ai-interaction", // Manager can access AI
-  // ],
   // Add more roles as needed
 };
 
@@ -191,12 +185,6 @@ export async function proxy(request: NextRequest) {
       isAuthenticated = true;
       if (!userRole) {
         userRole = "user";
-      }
-    } else if (accessToken === "dev-manager-token") {
-      user = { email: "manager@gmail.com", role: "manager" };
-      isAuthenticated = true;
-      if (!userRole) {
-        userRole = "manager";
       }
     } else {
       // Production mode: Verify JWT token
