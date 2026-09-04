@@ -24,6 +24,7 @@ export default function LoginForm() {
 
   const {
     register,
+    setValue,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<LoginFormData>({
@@ -45,6 +46,7 @@ export default function LoginForm() {
       // Development dummy credentials check with role assignment
       const isDummyLogin =
         (data.email === "admin@gmail.com" && data.password === "admin") ||
+        (data.email === "manager@gmail.com" && data.password === "manager") ||
         (data.email === "user@gmail.com" && data.password === "user");
 
       if (isDummyLogin) {
@@ -57,6 +59,8 @@ export default function LoginForm() {
         let userRole = "user";
         if (data.email === "admin@gmail.com") {
           userRole = "admin";
+        } else if (data.email === "manager@gmail.com") {
+          userRole = "manager";
         } else if (data.email === "user@gmail.com") {
           userRole = "user";
         }
@@ -76,6 +80,8 @@ export default function LoginForm() {
         setTimeout(() => {
           if (userRole === "admin") {
             router.push("/admin/dashboard");
+          } else if (userRole === "manager") {
+            router.push("/manager/dashboard");
           } else {
             router.push("/user/dashboard");
           }
@@ -249,6 +255,38 @@ export default function LoginForm() {
                 )}
               </Button>
             </form>
+
+            <div className="mt-5 border-t border-border pt-4">
+              <p className="mb-3 text-center text-xs text-muted-foreground">
+                Quick access for development
+              </p>
+              <div className="grid grid-cols-2 gap-3">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="h-10 text-xs sm:text-sm"
+                  disabled={isLoading || isSubmitting}
+                  onClick={() => {
+                    setValue("email", "admin@gmail.com");
+                    setValue("password", "admin");
+                  }}
+                >
+                  Admin demo
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="h-10 text-xs sm:text-sm"
+                  disabled={isLoading || isSubmitting}
+                  onClick={() => {
+                    setValue("email", "user@gmail.com");
+                    setValue("password", "user");
+                  }}
+                >
+                  User demo
+                </Button>
+              </div>
+            </div>
           </div>
           <div className="w-full flex justify-center items-center mt-4">
             <p className="text-muted-foreground text-sm">
