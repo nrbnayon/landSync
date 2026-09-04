@@ -16,8 +16,8 @@ export const useLogout = () => {
 
     console.log("User logged out successfully");
 
-    // Redirect to login
-    router.push("/login");
+    // Redirect to the public landing page
+    router.push("/");
   };
 
   return { logout };
